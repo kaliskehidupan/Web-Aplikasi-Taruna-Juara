@@ -1,25 +1,25 @@
 {
-    'name': 'Taruna Juara Core Module & CMS',
+    'name': 'Taruna Juara Core & Full Website Platform',
     'version': '1.0.0',
     'category': 'Education/Tahfidz',
-    'summary': 'Core Odoo Business Logic, Full Landing Page CMS & REST API for Taruna Juara Digital Platform',
+    'summary': 'Full Odoo Stack Website, PMB Portal, & ERP Management for Taruna Juara Digital Platform',
     'description': """
-Taruna Juara Core Module & Full Landing Page CMS
-================--------------------------------
-Pusat logika bisnis & CMS terintegrasi untuk Platform Digital Taruna Juara:
-- CMS Landing Page (Hero, Visi-Misi, Rutinitas Kegiatan, Student Journey, Tata Tertib, Pengurus)
-- PMB & Pendaftaran Calon Mahasantri
-- Manajemen Mahasantri & Alumni
-- Pembimbingan Ustadz & Halaqah
-- Manajemen Gedung & Kamar Asrama
-- REST API Controller untuk Frontend Integration
+Taruna Juara Full Odoo Website & ERP Platform
+================================================
+Platform terpadu berbasis Full Odoo Stack (Website, QWeb Templates, & ERP):
+- Public Landing Page Website (Hero, Visi-Misi, Rutinitas Kegiatan, Student Journey, Tata Tertib, Ustadz, Asrama)
+- Form Pendaftaran PMB Online dengan Upload File KTP/KTM
+- Portal Pemeriksaan Status Pendaftaran
+- Pembinaan Mahasantri Tahfidz 30 Juz & Asrama
+- Manajemen Backend Admin Odoo ERP
     """,
     'author': 'Rumah Tahfidz Taruna Juara',
     'website': 'https://tarunajuara.org',
     'license': 'LGPL-3',
-    'depends': ['base', 'web', 'mail'],
+    'depends': ['base', 'web', 'mail', 'website', 'portal'],
     'data': [
         'security/ir.model.access.csv',
+        'views/templates.xml',
         'views/landing_content_views.xml',
         'views/applicant_views.xml',
         'views/santri_views.xml',

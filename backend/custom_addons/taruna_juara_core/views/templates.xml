@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Public Website & Portal QWeb Templates for Taruna Juara -->
+    
+    <template id="index_template" name="Taruna Juara Landing Page">
+        <t t-call="website.layout">
+            <t t-set="title">Taruna Juara Digital Platform - Rumah Tahfidz 30 Juz</t>
+            
+            <div id="wrap" class="oe_structure oe_empty">
+                <!-- HERO SECTION -->
+                <section class="py-5 bg-gradient-to-r text-white shadow-lg" style="background: linear-gradient(135deg, #18181B 0%, #27272A 50%, #EA580C 100%);">
+                    <div class="container py-5">
+                        <div class="row align-items-center">
+                            <div class="col-lg-7 mb-4 mb-lg-0">
+                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3" style="font-size: 0.85rem;">
+                                    <i class="fa fa-star me-1"></i> Penerimaan Mahasantri Baru 2026/2027
+                                </span>
+                                <h1 class="display-4 fw-bolder mb-3" style="letter-spacing: -1px;">
+                                    <t t-esc="hero.title if hero else 'Mencetak Generasi Rabbani &amp; Pemimpin Juara'"/>
+                                </h1>
+                                <p class="lead mb-4 text-white-50" style="font-size: 1.25rem;">
+                                    <t t-esc="hero.subtitle if hero else 'Platform terintegrasi pembinaan mahasantri tahfidz Al-Qur\'an, kedisiplinan, dan akademik.'"/>
+                                </p>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <button class="btn btn-warning btn-lg px-4 py-3 rounded-3 fw-bold text-dark shadow" data-bs-toggle="modal" data-bs-target="#pmbRegisterModal">
+                                        <i class="fa fa-paper-plane me-2"></i> Daftar PMB Now
+                                    </button>
+                                    <a href="/pmb/status" class="btn btn-outline-light btn-lg px-4 py-3 rounded-3 fw-semibold">
+                                        <i class="fa fa-search me-2"></i> Cek Status Pendaftaran
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-5">
+                                <div class="card bg-dark text-white border-secondary rounded-4 shadow-lg p-4">
+                                    <div class="card-body">
+                                        <h4 class="fw-bold mb-3 text-warning"><i class="fa fa-trophy me-2"></i> Capaian &amp; Statistik Utama</h4>
+                                        <div class="row text-center g-3">
+                                            <div class="col-6">
+                                                <div class="p-3 bg-secondary bg-opacity-25 rounded-3">
+                                                    <h2 class="fw-bolder mb-0 text-warning"><t t-esc="hero.stat_santri_count if hero else 150"/></h2>
+                                                    <small class="text-white-50">Mahasantri Aktif</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="p-3 bg-secondary bg-opacity-25 rounded-3">
+                                                    <h2 class="fw-bolder mb-0 text-warning"><t t-esc="hero.stat_hafalan_target if hero else '30 Juz'"/></h2>
+                                                    <small class="text-white-50">Target Hafalan</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="p-3 bg-secondary bg-opacity-25 rounded-3">
+                                                    <h2 class="fw-bolder mb-0 text-warning"><t t-esc="hero.stat_scholarship_rate if hero else '100%'"/></h2>
+                                                    <small class="text-white-50">Beasiswa Tahfidz</small>
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="p-3 bg-secondary bg-opacity-25 rounded-3">
+                                                    <h2 class="fw-bolder mb-0 text-warning"><t t-esc="hero.stat_alumni_success if hero else '98%'"/></h2>
+                                                    <small class="text-white-50">Kelulusan Alumni</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VISI & MISI SECTION -->
+                <section class="py-5 bg-light">
+                    <div class="container py-4">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bolder text-dark mb-2">Visi &amp; Misi Lembaga</h2>
+                            <p class="text-muted">Landasan filosofis pembinaan mahasantri Rumah Tahfidz Taruna Juara</p>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-md-5">
+                                <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: linear-gradient(135deg, #FFF5ED 0%, #FFFFFF 100%);">
+                                    <div class="card-body">
+                                        <div class="badge bg-danger mb-3 p-2 rounded-3"><i class="fa fa-eye fs-5"></i></div>
+                                        <h3 class="fw-bold text-dark mb-3">Visi Utama</h3>
+                                        <p class="fs-5 text-secondary lead" style="font-style: italic;">
+                                            "<t t-esc="vision_mission.vision_text if vision_mission else 'Menjadi pusat keunggulan pencetak huffazh Al-Qur\'an berkarakter Pemimpin Rabbani.'"/>"
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                    <div class="card-body">
+                                        <div class="badge bg-warning text-dark mb-3 p-2 rounded-3"><i class="fa fa-bullseye fs-5"></i></div>
+                                        <h3 class="fw-bold text-dark mb-3">Misi Strategis</h3>
+                                        <ul class="list-unstyled mb-0">
+                                            <li class="d-flex align-items-start mb-3">
+                                                <i class="fa fa-check-circle text-success fs-5 me-3 mt-1"></i>
+                                                <span class="fs-6"><t t-esc="vision_mission.mission_1 if vision_mission else 'Menyelenggarakan pendidikan tahfidz Al-Qur\'an 30 Juz secara terstruktur.'"/></span>
+                                            </li>
+                                            <li class="d-flex align-items-start mb-3">
+                                                <i class="fa fa-check-circle text-success fs-5 me-3 mt-1"></i>
+                                                <span class="fs-6"><t t-esc="vision_mission.mission_2 if vision_mission else 'Membentuk karakter kepemimpinan, kemandirian, dan kedisiplinan asrama.'"/></span>
+                                            </li>
+                                            <li class="d-flex align-items-start">
+                                                <i class="fa fa-check-circle text-success fs-5 me-3 mt-1"></i>
+                                                <span class="fs-6"><t t-esc="vision_mission.mission_3 if vision_mission else 'Mengembangkan potensi akademik kuliah dan jiwa wirausaha Rabbani.'"/></span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- RUTINITAS KEGIATAN TIMELINE -->
+                <section class="py-5 bg-white">
+                    <div class="container py-4">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bolder text-dark mb-2">Rutinitas &amp; Jadwal Harian</h2>
+                            <p class="text-muted">Ritme kehidupan mahasantri dari sebelum subuh hingga istirahat malam</p>
+                        </div>
+                        <div class="row row-cols-1 row-cols-md-3 g-4">
+                            <t t-foreach="kegiatan_list" t-as="k">
+                                <div class="col">
+                                    <div class="card h-100 border-1 border-light shadow-sm rounded-4 hover-shadow transition">
+                                        <div class="card-body p-4">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <span class="badge bg-dark px-3 py-2 rounded-pill">
+                                                    <i class="fa fa-clock-o me-1"></i> <t t-esc="k.jam_mulai"/> - <t t-esc="k.jam_selesai"/>
+                                                </span>
+                                                <span class="badge bg-warning text-dark text-capitalize px-2 py-1"><t t-esc="k.kategori"/></span>
+                                            </div>
+                                            <h5 class="fw-bold text-dark mb-2"><t t-esc="k.name"/></h5>
+                                            <p class="text-muted small mb-0"><t t-esc="k.deskripsi"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STUDENT JOURNEY -->
+                <section class="py-5 bg-light">
+                    <div class="container py-4">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bolder text-dark mb-2">Tahapan Perjalanan Mahasantri</h2>
+                            <p class="text-muted">Tahapan pembinaan bertahap dari mahasiswa baru hingga hafiz 30 juz</p>
+                        </div>
+                        <div class="row g-4">
+                            <t t-foreach="journey_list" t-as="j">
+                                <div class="col-md-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3 fw-bold fs-4" style="width: 45px; height: 45px;">
+                                                    <t t-esc="j.step_number"/>
+                                                </div>
+                                                <div>
+                                                    <h5 class="fw-bold mb-0 text-dark"><t t-esc="j.title"/></h5>
+                                                    <small class="text-muted"><t t-esc="j.duration"/></small>
+                                                </div>
+                                            </div>
+                                            <span class="badge bg-success mb-3"><i class="fa fa-book me-1"></i> <t t-esc="j.target_hafalan"/></span>
+                                            <p class="text-secondary small mb-0"><t t-esc="j.description"/></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- USTADZ & PENGASUH -->
+                <section class="py-5 bg-white">
+                    <div class="container py-4">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bolder text-dark mb-2">Dewan Ustadz &amp; Pengasuh</h2>
+                            <p class="text-muted">Pembina hafalan dan mentor kehidupan mahasantri Taruna Juara</p>
+                        </div>
+                        <div class="row g-4">
+                            <t t-foreach="ustadz_list" t-as="u">
+                                <div class="col-md-4">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 text-center p-4">
+                                        <div class="card-body">
+                                            <div class="bg-secondary bg-opacity-10 rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 90px; height: 90px;">
+                                                <i class="fa fa-user-circle fs-1 text-secondary"></i>
+                                            </div>
+                                            <h5 class="fw-bold text-dark mb-1"><t t-esc="u.name"/></h5>
+                                            <span class="badge bg-warning text-dark mb-3"><t t-esc="u.title"/></span>
+                                            <p class="text-muted small mb-2"><i class="fa fa-star me-1 text-warning"></i> Spesialisasi: <t t-esc="u.specialization"/></p>
+                                            <p class="text-secondary small italic mb-0" style="font-style: italic;">"<t t-esc="u.quote"/>"</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ASRAMA BUILDINGS MAP OVERVIEW -->
+                <section class="py-5 bg-dark text-white">
+                    <div class="container py-4">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bolder text-warning mb-2">Fasilitas Asrama &amp; Kamar</h2>
+                            <p class="text-white-50">Daftar gedung asrama dan ketersediaan kamar mahasantri</p>
+                        </div>
+                        <div class="row g-4">
+                            <t t-foreach="asrama_list" t-as="g">
+                                <div class="col-md-6">
+                                    <div class="card bg-secondary bg-opacity-25 border-secondary text-white rounded-4 p-4">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h4 class="fw-bold text-warning mb-0"><i class="fa fa-building me-2"></i> <t t-esc="g.name"/></h4>
+                                                <span class="badge bg-info"><t t-esc="g.code"/></span>
+                                            </div>
+                                            <p class="text-white-50 small mb-4"><t t-esc="g.description"/></p>
+                                            <h6 class="fw-bold mb-3 text-uppercase text-warning">Kamar Terdaftar:</h6>
+                                            <div class="row g-2">
+                                                <t t-foreach="g.kamar_ids" t-as="k">
+                                                    <div class="col-6">
+                                                        <div class="p-2 border border-secondary rounded-3 bg-dark">
+                                                            <div class="d-flex justify-content-between">
+                                                                <strong class="small text-white"><t t-esc="k.name"/></strong>
+                                                                <span t-attf-class="badge #{'bg-success' if k.status=='tersedia' else 'bg-danger'}">
+                                                                    <t t-esc="k.terisi"/>/<t t-esc="k.kapasitas"/> Bed
+                                                                </span>
+                                                            </div>
+                                                            <small class="text-white-50 d-block" style="font-size: 0.75rem;">Lantai <t t-esc="k.lantai"/></small>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- MODAL PENDAFTARAN PMB -->
+            <div class="modal fade" id="pmbRegisterModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content border-0 rounded-4 shadow-lg">
+                        <div class="modal-header bg-dark text-white rounded-top-4 p-4">
+                            <h5 class="modal-title fw-bold text-warning"><i class="fa fa-wpforms me-2"></i> Form Pendaftaran PMB Taruna Juara 2026</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="/pmb/submit" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="modal-body p-4">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Nama Lengkap *</label>
+                                        <input type="text" name="name" class="form-control" placeholder="Ahmad Saiful" required="required"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">NIK *</label>
+                                        <input type="text" name="nik" class="form-control" placeholder="3404012004050001" required="required"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Nomor WhatsApp / HP *</label>
+                                        <input type="text" name="phone" class="form-control" placeholder="081234567890" required="required"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Email Aktif *</label>
+                                        <input type="email" name="email" class="form-control" placeholder="saiful@gmail.com" required="required"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Universitas / Kampus</label>
+                                        <input type="text" name="university" class="form-control" value="Universitas Ahmad Dahlan"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Program Studi / Jurusan</label>
+                                        <input type="text" name="major" class="form-control" placeholder="Informatika"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Upload File KTP</label>
+                                        <input type="file" name="ktp_file" class="form-control" accept="image/*,.pdf"/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold small">Upload File KTM / Kartu Pelajar</label>
+                                        <input type="file" name="ktm_file" class="form-control" accept="image/*,.pdf"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold small">Motivasi Bergabung</label>
+                                        <textarea name="motivation" class="form-control" rows="2" placeholder="Tuliskan motivasi Anda bergabung..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer bg-light p-3">
+                                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-warning px-4 fw-bold text-dark"><i class="fa fa-paper-plane me-1"></i> Kirim Pendaftaran</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- PUBLIC STATUS TRACKING TEMPLATE -->
+    <template id="status_template" name="Pemeriksaan Status PMB">
+        <t t-call="website.layout">
+            <t t-set="title">Cek Status Pendaftaran PMB - Taruna Juara</t>
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card border-0 shadow-lg rounded-4 p-4 mb-4">
+                            <div class="card-body text-center">
+                                <h3 class="fw-bold text-dark mb-2"><i class="fa fa-search text-warning me-2"></i> Lacak Status Pendaftaran PMB</h3>
+                                <p class="text-muted mb-4">Masukkan Kode Pendaftaran Anda (Contoh: <code>PMB-2026-TJ-1234</code>)</p>
+                                
+                                <form action="/pmb/status" method="GET" class="d-flex gap-2 mb-4">
+                                    <input type="text" name="code" class="form-control form-control-lg rounded-3" placeholder="Masukkan Kode Registrasi PMB..." t-att-value="code" required="required"/>
+                                    <button type="submit" class="btn btn-warning btn-lg fw-bold px-4 rounded-3 text-dark"><i class="fa fa-search"></i> Cari</button>
+                                </form>
+
+                                <t t-if="success">
+                                    <div class="alert alert-success rounded-3 p-3 text-start mb-4">
+                                        <h5 class="fw-bold"><i class="fa fa-check-circle me-1"></i> Pendaftaran Berhasil Disimpan!</h5>
+                                        <p class="mb-0">Kode Registrasi Anda: <strong class="fs-5 text-dark" t-esc="code"/></p>
+                                    </div>
+                                </t>
+
+                                <t t-if="applicant">
+                                    <div class="card bg-light border-0 rounded-4 text-start p-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h4 class="fw-bold text-dark mb-0"><t t-esc="applicant.name"/></h4>
+                                            <span class="badge bg-primary fs-6 px-3 py-2"><t t-esc="applicant.stage"/></span>
+                                        </div>
+                                        <hr/>
+                                        <div class="row g-2">
+                                            <div class="col-6"><strong>Kode Registrasi:</strong> <span t-esc="applicant.registration_code"/></div>
+                                            <div class="col-6"><strong>Email:</strong> <span t-esc="applicant.email"/></div>
+                                            <div class="col-6"><strong>Kampus:</strong> <span t-esc="applicant.university"/></div>
+                                            <div class="col-6"><strong>Program Studi:</strong> <span t-esc="applicant.major"/></div>
+                                            <div class="col-6"><strong>Status Verifikasi:</strong> <span class="badge bg-warning text-dark" t-esc="applicant.verification_status"/></div>
+                                            <div class="col-6"><strong>File KTP:</strong> <span t-esc="'✅ Uploaded' if applicant.ktp_file else '❌ Belum Upload'"/></div>
+                                        </div>
+                                    </div>
+                                </t>
+                                <t t-elif="code">
+                                    <div class="alert alert-warning rounded-3 text-start">
+                                        Kode Pendaftaran <strong><t t-esc="code"/></strong> tidak ditemukan. Silakan periksa kembali nomor registrasi Anda.
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>
