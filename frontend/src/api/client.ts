@@ -1,6 +1,6 @@
 // Central API Service Client for Taruna Juara Digital Platform
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8069';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8070';
 
 export interface PMBRegisterPayload {
   fullName: string;
