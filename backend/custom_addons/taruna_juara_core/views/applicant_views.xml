@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_taruna_applicant_tree" model="ir.ui.view">
+        <field name="name">taruna.applicant.tree</field>
+        <field name="model">taruna.applicant</field>
+        <field name="arch" type="xml">
+            <tree string="Calon Mahasantri / Pendaftar PMB">
+                <field name="registration_code"/>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="university"/>
+                <field name="hafalan_count"/>
+                <field name="track"/>
+                <field name="stage"/>
+                <field name="verification_status"/>
+                <field name="selection_result"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_taruna_applicant_form" model="ir.ui.view">
+        <field name="name">taruna.applicant.form</field>
+        <field name="model">taruna.applicant</field>
+        <field name="arch" type="xml">
+            <form string="Detail Pendaftar PMB">
+                <header>
+                    <button name="action_approve_verification" string="Setujui Verifikasi Berkas" type="object" class="oe_highlight" attrs="{'invisible': [('verification_status', '=', 'approved')]}"/>
+                    <button name="action_pass_selection" string="Lulus Seleksi" type="object" class="btn-success" attrs="{'invisible': [('selection_result', '=', 'passed')]}"/>
+                    <button name="action_reject_selection" string="Tolak Seleksi" type="object" class="btn-danger" attrs="{'invisible': [('selection_result', '=', 'rejected')]}"/>
+                    <button name="action_convert_to_santri" string="Jadikan Mahasantri Aktif" type="object" class="btn-primary" attrs="{'invisible': [('stage', '=', '6_CONVERTED_SANTRI')]}"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="2_WAITING_VERIFICATION,3_OFFLINE_TEST_SCHEDULED,4_SELECTION_PASSED,5_CHECKIN_CONFIRMATION,6_CONVERTED_SANTRI"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="registration_code" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="name" placeholder="Nama Lengkap Pendaftar"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="Informasi Kontak &amp; Identitas">
+                            <field name="nik"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="origin_city"/>
+                        </group>
+                        <group string="Informasi Akademik Kampus">
+                            <field name="university"/>
+                            <field name="university_badge"/>
+                            <field name="faculty"/>
+                            <field name="major"/>
+                            <field name="semester"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Informasi Tahfidz &amp; Jalur">
+                            <field name="hafalan_count"/>
+                            <field name="target_juz"/>
+                            <field name="track"/>
+                            <field name="quran_experience"/>
+                            <field name="motivation"/>
+                        </group>
+                        <group string="Status Verifikasi &amp; Jadwal Tes">
+                            <field name="verification_status"/>
+                            <field name="verification_date"/>
+                            <field name="test_date"/>
+                            <field name="test_time"/>
+                            <field name="test_location"/>
+                            <field name="test_interviewer"/>
+                            <field name="selection_result"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dokumen Berkas Pendaftaran">
+                            <group>
+                                <field name="ktp_file" filename="ktp_filename"/>
+                                <field name="ktm_file" filename="ktm_filename"/>
+                                <field name="photo_file" filename="photo_filename" widget="image"/>
+                            </group>
+                        </page>
+                        <page string="Check-in Asrama &amp; Relasi">
+                            <group>
+                                <field name="checkin_date"/>
+                                <field name="is_checkin_confirmed"/>
+                                <field name="santri_id" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_taruna_applicant" model="ir.actions.act_window">
+        <field name="name">Data Pendaftar PMB</field>
+        <field name="res_model">taruna.applicant</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

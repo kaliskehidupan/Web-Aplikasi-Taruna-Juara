@@ -1,3 +1,3 @@
-# Taruna Juara Core Addon Init
-# from . import models
-# from . import controllers
+# -*- coding: utf-8 -*-
+from . import models
+from . import controllers

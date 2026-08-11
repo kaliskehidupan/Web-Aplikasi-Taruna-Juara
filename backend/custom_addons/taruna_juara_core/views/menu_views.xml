@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- TOP LEVEL MENU -->
+    <menuitem id="menu_taruna_root" name="Taruna Juara" web_icon="taruna_juara_core,static/description/icon.png" sequence="5"/>
+
+    <!-- SUBMENU: CMS LANDING PAGE -->
+    <menuitem id="menu_taruna_landing_root" name="📌 CMS Landing Page" parent="menu_taruna_root" sequence="10"/>
+    <menuitem id="menu_taruna_landing_hero" name="Hero Section" parent="menu_taruna_landing_root" action="action_taruna_landing_hero" sequence="10"/>
+    <menuitem id="menu_taruna_landing_vision_mission" name="Visi &amp; Misi" parent="menu_taruna_landing_root" action="action_taruna_landing_vision_mission" sequence="20"/>
+    <menuitem id="menu_taruna_landing_kegiatan" name="Rutinitas &amp; Kegiatan" parent="menu_taruna_landing_root" action="action_taruna_landing_kegiatan" sequence="30"/>
+    <menuitem id="menu_taruna_landing_journey" name="Student Journey" parent="menu_taruna_landing_root" action="action_taruna_landing_journey" sequence="40"/>
+    <menuitem id="menu_taruna_landing_tata_tertib" name="Tata Tertib" parent="menu_taruna_landing_root" action="action_taruna_landing_tata_tertib" sequence="50"/>
+    <menuitem id="menu_taruna_pengurus" name="Struktur Pengurus" parent="menu_taruna_landing_root" action="action_taruna_pengurus" sequence="60"/>
+
+    <!-- SUBMENU: PMB & PENDAFTARAN -->
+    <menuitem id="menu_taruna_pmb_root" name="📋 PMB &amp; Pendaftaran" parent="menu_taruna_root" sequence="20"/>
+    <menuitem id="menu_taruna_applicant" name="Data Pendaftar PMB" parent="menu_taruna_pmb_root" action="action_taruna_applicant" sequence="10"/>
+    <menuitem id="menu_taruna_landing_pmb_batch" name="Gelombang PMB" parent="menu_taruna_pmb_root" action="action_taruna_landing_pmb_batch" sequence="20"/>
+
+    <!-- SUBMENU: MAHASANTRI & ALUMNI -->
+    <menuitem id="menu_taruna_santri_root" name="🎓 Mahasantri &amp; Alumni" parent="menu_taruna_root" sequence="30"/>
+    <menuitem id="menu_taruna_santri" name="Data Mahasantri" parent="menu_taruna_santri_root" action="action_taruna_santri" sequence="10"/>
+
+    <!-- SUBMENU: USTADZ & PENGASUH -->
+    <menuitem id="menu_taruna_ustadz_root" name="👳 Ustadz &amp; Pengasuh" parent="menu_taruna_root" sequence="40"/>
+    <menuitem id="menu_taruna_ustadz" name="Daftar Pengasuh" parent="menu_taruna_ustadz_root" action="action_taruna_ustadz" sequence="10"/>
+
+    <!-- SUBMENU: ASRAMA & KAMAR -->
+    <menuitem id="menu_taruna_asrama_root" name="🏢 Asrama &amp; Kamar" parent="menu_taruna_root" sequence="50"/>
+    <menuitem id="menu_taruna_gedung" name="Gedung Asrama" parent="menu_taruna_asrama_root" action="action_taruna_gedung" sequence="10"/>
+    <menuitem id="menu_taruna_kamar" name="Data Kamar" parent="menu_taruna_asrama_root" action="action_taruna_kamar" sequence="20"/>
+</odoo>

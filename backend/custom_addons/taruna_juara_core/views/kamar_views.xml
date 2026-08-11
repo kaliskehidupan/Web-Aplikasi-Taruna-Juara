@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- GEDUNG VIEWS -->
+    <record id="view_taruna_gedung_tree" model="ir.ui.view">
+        <field name="name">taruna.gedung.tree</field>
+        <field name="model">taruna.gedung</field>
+        <field name="arch" type="xml">
+            <tree string="Gedung Asrama">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_taruna_gedung" model="ir.actions.act_window">
+        <field name="name">Gedung Asrama</field>
+        <field name="res_model">taruna.gedung</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- KAMAR VIEWS -->
+    <record id="view_taruna_kamar_tree" model="ir.ui.view">
+        <field name="name">taruna.kamar.tree</field>
+        <field name="model">taruna.kamar</field>
+        <field name="arch" type="xml">
+            <tree string="Kamar Asrama">
+                <field name="gedung_id"/>
+                <field name="lantai"/>
+                <field name="name"/>
+                <field name="kapasitas"/>
+                <field name="terisi"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_taruna_kamar_form" model="ir.ui.view">
+        <field name="name">taruna.kamar.form</field>
+        <field name="model">taruna.kamar</field>
+        <field name="arch" type="xml">
+            <form string="Detail Kamar Asrama">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="gedung_id"/>
+                            <field name="lantai"/>
+                        </group>
+                        <group>
+                            <field name="kapasitas"/>
+                            <field name="terisi" readonly="1"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <group string="Fasilitas &amp; Catatan">
+                        <field name="fasilitas"/>
+                        <field name="catatan"/>
+                    </group>
+                    <notebook>
+                        <page string="Daftar Penghuni Mahasantri">
+                            <field name="santri_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_taruna_kamar" model="ir.actions.act_window">
+        <field name="name">Kamar Asrama</field>
+        <field name="res_model">taruna.kamar</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

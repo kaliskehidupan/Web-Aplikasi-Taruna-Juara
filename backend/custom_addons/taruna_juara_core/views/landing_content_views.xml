@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- HERO SECTION VIEWS -->
+    <record id="view_taruna_landing_hero_form" model="ir.ui.view">
+        <field name="name">taruna.landing.hero.form</field>
+        <field name="model">taruna.landing.hero</field>
+        <field name="arch" type="xml">
+            <form string="Konfigurasi Hero Section">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="title"/>
+                            <field name="subtitle"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="cta_primary_text"/>
+                            <field name="cta_secondary_text"/>
+                            <field name="hero_image" widget="image"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Kartu Statistik">
+                            <group col="4">
+                                <field name="stat_santri_count"/>
+                                <field name="stat_hafalan_target"/>
+                                <field name="stat_scholarship_rate"/>
+                                <field name="stat_alumni_success"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_taruna_landing_hero" model="ir.actions.act_window">
+        <field name="name">Hero Section</field>
+        <field name="res_model">taruna.landing.hero</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- VISI MISI VIEWS -->
+    <record id="view_taruna_landing_vision_mission_form" model="ir.ui.view">
+        <field name="name">taruna.landing.vision_mission.form</field>
+        <field name="model">taruna.landing.vision_mission</field>
+        <field name="arch" type="xml">
+            <form string="Visi &amp; Misi">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="active"/>
+                        <field name="vision_text"/>
+                        <field name="mission_1"/>
+                        <field name="mission_2"/>
+                        <field name="mission_3"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_taruna_landing_vision_mission" model="ir.actions.act_window">
+        <field name="name">Visi &amp; Misi</field>
+        <field name="res_model">taruna.landing.vision_mission</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- KEGIATAN HARIAN VIEWS -->
+    <record id="view_taruna_landing_kegiatan_tree" model="ir.ui.view">
+        <field name="name">taruna.landing.kegiatan.tree</field>
+        <field name="model">taruna.landing.kegiatan</field>
+        <field name="arch" type="xml">
+            <tree string="Jadwal Kegiatan Harian">
+                <field name="sequence" widget="handle"/>
+                <field name="jam_mulai"/>
+                <field name="jam_selesai"/>
+                <field name="name"/>
+                <field name="kategori"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_taruna_landing_kegiatan" model="ir.actions.act_window">
+        <field name="name">Rutinitas &amp; Kegiatan Harian</field>
+        <field name="res_model">taruna.landing.kegiatan</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- STUDENT JOURNEY VIEWS -->
+    <record id="view_taruna_landing_journey_tree" model="ir.ui.view">
+        <field name="name">taruna.landing.journey.tree</field>
+        <field name="model">taruna.landing.journey</field>
+        <field name="arch" type="xml">
+            <tree string="Alur Pendidikan">
+                <field name="step_number"/>
+                <field name="title"/>
+                <field name="duration"/>
+                <field name="target_hafalan"/>
+                <field name="badge_color"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_taruna_landing_journey" model="ir.actions.act_window">
+        <field name="name">Student Journey (Alur Santri)</field>
+        <field name="res_model">taruna.landing.journey</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- TATA TERTIB VIEWS -->
+    <record id="view_taruna_landing_tata_tertib_tree" model="ir.ui.view">
+        <field name="name">taruna.landing.tata_tertib.tree</field>
+        <field name="model">taruna.landing.tata_tertib</field>
+        <field name="arch" type="xml">
+            <tree string="Tata Tertib &amp; Kedisiplinan">
+                <field name="sequence" widget="handle"/>
+                <field name="kategori"/>
+                <field name="name"/>
+                <field name="poin"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_taruna_landing_tata_tertib" model="ir.actions.act_window">
+        <field name="name">Tata Tertib &amp; Kedisiplinan</field>
+        <field name="res_model">taruna.landing.tata_tertib</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- GELOMBANG PMB VIEWS -->
+    <record id="view_taruna_landing_pmb_batch_tree" model="ir.ui.view">
+        <field name="name">taruna.landing.pmb_batch.tree</field>
+        <field name="model">taruna.landing.pmb_batch</field>
+        <field name="arch" type="xml">
+            <tree string="Gelombang PMB">
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="quota"/>
+                <field name="is_open"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_taruna_landing_pmb_batch" model="ir.actions.act_window">
+        <field name="name">Gelombang PMB</field>
+        <field name="res_model">taruna.landing.pmb_batch</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- STRUKTUR PENGURUS VIEWS -->
+    <record id="view_taruna_pengurus_tree" model="ir.ui.view">
+        <field name="name">taruna.pengurus.tree</field>
+        <field name="model">taruna.pengurus</field>
+        <field name="arch" type="xml">
+            <tree string="Struktur Kepengurusan">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="position"/>
+                <field name="division"/>
+                <field name="phone"/>
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_taruna_pengurus" model="ir.actions.act_window">
+        <field name="name">Struktur Kepengurusan</field>
+        <field name="res_model">taruna.pengurus</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

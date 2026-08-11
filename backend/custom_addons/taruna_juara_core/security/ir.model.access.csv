@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_taruna_landing_hero,taruna.landing.hero,model_taruna_landing_hero,base.group_user,1,1,1,1
+access_taruna_landing_vision_mission,taruna.landing.vision_mission,model_taruna_landing_vision_mission,base.group_user,1,1,1,1
+access_taruna_landing_kegiatan,taruna.landing.kegiatan,model_taruna_landing_kegiatan,base.group_user,1,1,1,1
+access_taruna_landing_journey,taruna.landing.journey,model_taruna_landing_journey,base.group_user,1,1,1,1
+access_taruna_landing_tata_tertib,taruna.landing.tata_tertib,model_taruna_landing_tata_tertib,base.group_user,1,1,1,1
+access_taruna_landing_pmb_batch,taruna.landing.pmb_batch,model_taruna_landing_pmb_batch,base.group_user,1,1,1,1
+access_taruna_pengurus,taruna.pengurus,model_taruna_pengurus,base.group_user,1,1,1,1
+access_taruna_applicant,taruna.applicant,model_taruna_applicant,base.group_user,1,1,1,1
+access_taruna_santri,taruna.santri,model_taruna_santri,base.group_user,1,1,1,1
+access_taruna_ustadz,taruna.ustadz,model_taruna_ustadz,base.group_user,1,1,1,1
+access_taruna_gedung,taruna.gedung,model_taruna_gedung,base.group_user,1,1,1,1
+access_taruna_kamar,taruna.kamar,model_taruna_kamar,base.group_user,1,1,1,1

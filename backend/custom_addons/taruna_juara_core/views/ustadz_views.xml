@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_taruna_ustadz_tree" model="ir.ui.view">
+        <field name="name">taruna.ustadz.tree</field>
+        <field name="model">taruna.ustadz</field>
+        <field name="arch" type="xml">
+            <tree string="Ustadz &amp; Pengasuh">
+                <field name="sequence" widget="handle"/>
+                <field name="nip"/>
+                <field name="name"/>
+                <field name="title"/>
+                <field name="specialization"/>
+                <field name="phone"/>
+                <field name="show_on_landing"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_taruna_ustadz_form" model="ir.ui.view">
+        <field name="name">taruna.ustadz.form</field>
+        <field name="model">taruna.ustadz</field>
+        <field name="arch" type="xml">
+            <form string="Profil Ustadz Pengasuh">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="nip"/>
+                            <field name="title"/>
+                            <field name="specialization"/>
+                            <field name="show_on_landing"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <field name="photo" widget="image"/>
+                        </group>
+                    </group>
+                    <group string="Pesan &amp; Biografi">
+                        <field name="quote"/>
+                        <field name="bio"/>
+                    </group>
+                    <notebook>
+                        <page string="Mahasantri Bimbingan">
+                            <field name="santri_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_taruna_ustadz" model="ir.actions.act_window">
+        <field name="name">Ustadz &amp; Pengasuh</field>
+        <field name="res_model">taruna.ustadz</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
