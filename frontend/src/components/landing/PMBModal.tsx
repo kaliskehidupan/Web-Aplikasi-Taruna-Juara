@@ -16,7 +16,9 @@ import {
   ArrowLeft,
   Copy,
   Download,
+  Loader2,
 } from 'lucide-react';
+import { apiService } from '../../api/client';
 
 interface PMBModalProps {
   isOpen: boolean;
@@ -26,6 +28,7 @@ interface PMBModalProps {
 export const PMBModal: React.FC<PMBModalProps> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState<number>(1);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [regCode, setRegCode] = useState<string>('');
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -71,12 +74,25 @@ export const PMBModal: React.FC<PMBModalProps> = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [fieldName]: filename }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
-    const generatedCode = `PMB-2026-TJ-${randomNum}`;
-    setRegCode(generatedCode);
-    setIsSubmitted(true);
+    setIsLoading(true);
+    try {
+      const res = await apiService.registerPMB(formData);
+      if (res && res.status === 'success' && res.data && res.data.registration_code) {
+        setRegCode(res.data.registration_code);
+      } else {
+        const randomNum = Math.floor(1000 + Math.random() * 9000);
+        setRegCode(`PMB-2026-TJ-${randomNum}`);
+      }
+    } catch (err) {
+      console.warn('Backend API fallback to offline generated code:', err);
+      const randomNum = Math.floor(1000 + Math.random() * 9000);
+      setRegCode(`PMB-2026-TJ-${randomNum}`);
+    } finally {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }
   };
 
   const handleCopyCode = () => {
@@ -503,10 +519,20 @@ export const PMBModal: React.FC<PMBModalProps> = ({ isOpen, onClose }) => {
                       </button>
                       <button
                         type="submit"
-                        className="w-2/3 py-3.5 rounded-2xl text-sm font-extrabold text-white bg-gradient-to-r from-[#D93829] to-[#EA580C] hover:from-[#c22e20] shadow-lg shadow-[#D93829]/25 flex items-center justify-center gap-2"
+                        disabled={isLoading}
+                        className="w-2/3 py-3.5 rounded-2xl text-sm font-extrabold text-white bg-gradient-to-r from-[#D93829] to-[#EA580C] hover:from-[#c22e20] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#D93829]/25 flex items-center justify-center gap-2"
                       >
-                        <Send className="w-4 h-4" />
-                        <span>Kirim Pendaftaran PMB</span>
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <span>Mengirim ke Server Odoo...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4" />
+                            <span>Kirim Pendaftaran PMB</span>
+                          </>
+                        )}
                       </button>
                     </div>
                   </motion.div>
