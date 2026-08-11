@@ -70,8 +70,11 @@ export const PMBModal: React.FC<PMBModalProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleFileUpload = (fieldName: 'ktpFile' | 'ktmFile', filename: string) => {
-    setFormData((prev) => ({ ...prev, [fieldName]: filename }));
+  const handleRealFileUpload = (fieldName: 'ktpFile' | 'ktmFile', e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, [fieldName]: file.name }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -458,32 +461,36 @@ export const PMBModal: React.FC<PMBModalProps> = ({ isOpen, onClose }) => {
                     exit={{ opacity: 0, x: 10 }}
                     className="space-y-4"
                   >
-                    {/* Simulated Document Upload */}
+                    {/* Real Document Upload */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="border-2 border-dashed border-neutral-300 bg-neutral-50 p-3.5 rounded-2xl text-center hover:border-[#D93829] transition-colors">
+                      <div className="border-2 border-dashed border-neutral-300 bg-neutral-50 p-3.5 rounded-2xl text-center hover:border-[#D93829] transition-colors relative">
                         <UploadCloud className="w-6 h-6 text-[#D93829] mx-auto mb-1" />
                         <span className="block text-xs font-extrabold text-neutral-800">Foto KTP / Kartu Identitas</span>
-                        <span className="block text-[10px] text-neutral-500 mb-2">Format PDF / JPG (Max 2MB)</span>
-                        <button
-                          type="button"
-                          onClick={() => handleFileUpload('ktpFile', 'KTP_Mahasantri_Validated.pdf')}
-                          className="px-3 py-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 text-[10px] font-bold rounded-lg"
-                        >
-                          {formData.ktpFile ? `✅ ${formData.ktpFile}` : 'Upload Berkas KTP'}
-                        </button>
+                        <span className="block text-[10px] text-neutral-500 mb-2">Format PDF / JPG / PNG (Max 5MB)</span>
+                        <label className="inline-block px-4 py-2 bg-neutral-900 hover:bg-[#D93829] text-white text-[11px] font-extrabold rounded-xl cursor-pointer transition-colors shadow-sm">
+                          <span>{formData.ktpFile ? `✅ ${formData.ktpFile}` : 'Pilih File KTP'}</span>
+                          <input
+                            type="file"
+                            accept="image/*,.pdf"
+                            onChange={(e) => handleRealFileUpload('ktpFile', e)}
+                            className="hidden"
+                          />
+                        </label>
                       </div>
 
-                      <div className="border-2 border-dashed border-neutral-300 bg-neutral-50 p-3.5 rounded-2xl text-center hover:border-[#D93829] transition-colors">
+                      <div className="border-2 border-dashed border-neutral-300 bg-neutral-50 p-3.5 rounded-2xl text-center hover:border-[#D93829] transition-colors relative">
                         <FileText className="w-6 h-6 text-[#D93829] mx-auto mb-1" />
-                        <span className="block text-xs font-extrabold text-neutral-800">KTM / Bukti Mahasiswa</span>
-                        <span className="block text-[10px] text-neutral-500 mb-2">Format PDF / JPG (Max 2MB)</span>
-                        <button
-                          type="button"
-                          onClick={() => handleFileUpload('ktmFile', 'KTM_Student_Validated.pdf')}
-                          className="px-3 py-1 bg-neutral-200 hover:bg-neutral-300 text-neutral-800 text-[10px] font-bold rounded-lg"
-                        >
-                          {formData.ktmFile ? `✅ ${formData.ktmFile}` : 'Upload Berkas KTM'}
-                        </button>
+                        <span className="block text-xs font-extrabold text-neutral-800">KTM / Kartu Pelajar</span>
+                        <span className="block text-[10px] text-neutral-500 mb-2">Format PDF / JPG / PNG (Max 5MB)</span>
+                        <label className="inline-block px-4 py-2 bg-neutral-900 hover:bg-[#D93829] text-white text-[11px] font-extrabold rounded-xl cursor-pointer transition-colors shadow-sm">
+                          <span>{formData.ktmFile ? `✅ ${formData.ktmFile}` : 'Pilih File KTM'}</span>
+                          <input
+                            type="file"
+                            accept="image/*,.pdf"
+                            onChange={(e) => handleRealFileUpload('ktmFile', e)}
+                            className="hidden"
+                          />
+                        </label>
                       </div>
                     </div>
 

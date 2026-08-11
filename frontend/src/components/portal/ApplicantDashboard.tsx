@@ -120,8 +120,11 @@ export const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ isOpen, 
     }));
   };
 
-  const handleUploadSim = (field: 'ktpFile' | 'ktmFile' | 'photoFile', filename: string) => {
-    setFormData((prev) => ({ ...prev, [field]: filename }));
+  const handleRealFileUpload = (field: 'ktpFile' | 'ktmFile' | 'photoFile', e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({ ...prev, [field]: file.name }));
+    }
   };
 
   const handleSubmitProfileForm = (e: React.FormEvent) => {
@@ -461,60 +464,65 @@ export const ApplicantDashboard: React.FC<ApplicantDashboardProps> = ({ isOpen, 
                   <UploadCloud className="w-4 h-4 text-[#D93829]" />
                   <span>Upload Berkas Wajib (KTP, KTM, & Foto Profil)</span>
                 </h4>
-
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {/* Upload KTP */}
-                  <div className="bg-neutral-50 p-3.5 rounded-2xl border-2 border-dashed border-neutral-300 text-center hover:border-[#D93829] transition-colors">
+                  <div className="bg-neutral-50 p-3.5 rounded-2xl border-2 border-dashed border-neutral-300 text-center hover:border-[#D93829] transition-colors relative">
                     <FileText className="w-6 h-6 text-[#D93829] mx-auto mb-1" />
                     <span className="block text-xs font-bold text-neutral-800">1. Foto KTP</span>
-                    <span className="block text-[10px] text-neutral-400 mb-2">PDF/JPG Max 2MB</span>
-                    <button
-                      type="button"
-                      onClick={() => handleUploadSim('ktpFile', 'KTP_Validated.pdf')}
-                      className={`px-3 py-1 text-[10px] font-bold rounded-lg ${
-                        formData.ktpFile
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-neutral-200 text-neutral-800'
-                      }`}
-                    >
-                      {formData.ktpFile ? `✅ ${formData.ktpFile}` : 'Upload File KTP'}
-                    </button>
+                    <span className="block text-[10px] text-neutral-400 mb-2">PDF/JPG Max 5MB</span>
+                    <label className={`block w-full py-1.5 px-2 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
+                      formData.ktpFile
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                        : 'bg-neutral-900 text-white hover:bg-[#D93829]'
+                    }`}>
+                      <span>{formData.ktpFile ? `✅ ${formData.ktpFile}` : 'Pilih File KTP'}</span>
+                      <input
+                        type="file"
+                        accept="image/*,.pdf"
+                        onChange={(e) => handleRealFileUpload('ktpFile', e)}
+                        className="hidden"
+                      />
+                    </label>
                   </div>
 
                   {/* Upload KTM */}
-                  <div className="bg-neutral-50 p-3.5 rounded-2xl border-2 border-dashed border-neutral-300 text-center hover:border-[#D93829] transition-colors">
+                  <div className="bg-neutral-50 p-3.5 rounded-2xl border-2 border-dashed border-neutral-300 text-center hover:border-[#D93829] transition-colors relative">
                     <Building2 className="w-6 h-6 text-[#D93829] mx-auto mb-1" />
                     <span className="block text-xs font-bold text-neutral-800">2. Foto KTM</span>
-                    <span className="block text-[10px] text-neutral-400 mb-2">PDF/JPG Max 2MB</span>
-                    <button
-                      type="button"
-                      onClick={() => handleUploadSim('ktmFile', 'KTM_Student_Validated.pdf')}
-                      className={`px-3 py-1 text-[10px] font-bold rounded-lg ${
-                        formData.ktmFile
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-neutral-200 text-neutral-800'
-                      }`}
-                    >
-                      {formData.ktmFile ? `✅ ${formData.ktmFile}` : 'Upload File KTM'}
-                    </button>
+                    <span className="block text-[10px] text-neutral-400 mb-2">PDF/JPG Max 5MB</span>
+                    <label className={`block w-full py-1.5 px-2 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
+                      formData.ktmFile
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                        : 'bg-neutral-900 text-white hover:bg-[#D93829]'
+                    }`}>
+                      <span>{formData.ktmFile ? `✅ ${formData.ktmFile}` : 'Pilih File KTM'}</span>
+                      <input
+                        type="file"
+                        accept="image/*,.pdf"
+                        onChange={(e) => handleRealFileUpload('ktmFile', e)}
+                        className="hidden"
+                      />
+                    </label>
                   </div>
 
                   {/* Upload Foto Profil */}
-                  <div className="bg-neutral-50 p-3.5 rounded-2xl border-2 border-dashed border-neutral-300 text-center hover:border-[#D93829] transition-colors">
+                  <div className="bg-neutral-50 p-3.5 rounded-2xl border-2 border-dashed border-neutral-300 text-center hover:border-[#D93829] transition-colors relative">
                     <Camera className="w-6 h-6 text-[#D93829] mx-auto mb-1" />
                     <span className="block text-xs font-bold text-neutral-800">3. Pas Foto Rapi</span>
-                    <span className="block text-[10px] text-neutral-400 mb-2">JPG/PNG Max 2MB</span>
-                    <button
-                      type="button"
-                      onClick={() => handleUploadSim('photoFile', 'Foto_Official_3x4.jpg')}
-                      className={`px-3 py-1 text-[10px] font-bold rounded-lg ${
-                        formData.photoFile
-                          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                          : 'bg-neutral-200 text-neutral-800'
-                      }`}
-                    >
-                      {formData.photoFile ? `✅ ${formData.photoFile}` : 'Upload Pas Foto'}
-                    </button>
+                    <span className="block text-[10px] text-neutral-400 mb-2">JPG/PNG Max 5MB</span>
+                    <label className={`block w-full py-1.5 px-2 text-[10px] font-extrabold rounded-lg transition-all cursor-pointer ${
+                      formData.photoFile
+                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                        : 'bg-neutral-900 text-white hover:bg-[#D93829]'
+                    }`}>
+                      <span>{formData.photoFile ? `✅ ${formData.photoFile}` : 'Pilih Pas Foto'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleRealFileUpload('photoFile', e)}
+                        className="hidden"
+                      />
+                    </label>
                   </div>
                 </div>
               </div>
