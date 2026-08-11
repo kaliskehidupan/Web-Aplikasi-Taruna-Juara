@@ -12,6 +12,7 @@ import {
   Send,
 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { apiService } from '../../api/client';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -24,7 +25,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onClose,
   initialMode = 'login',
 }) => {
-  const { login, register, verifyEmail, switchPreset } = useAuth();
+  const { login, loginWithUserData, register, verifyEmail, switchPreset } = useAuth();
 
   const [mode, setMode] = useState<'login' | 'register' | 'verify_email'>(initialMode);
   const [name, setName] = useState('');
@@ -64,17 +65,62 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
     if (!email || !password) {
-      setErrorMsg('Harap isi Email dan Password Anda.');
+      setErrorMsg('Harap isi Email / Kode Registrasi dan Password Anda.');
       return;
     }
 
-    login(email);
-    onClose();
+    try {
+      const res = await apiService.login(email, password);
+      if (res && res.status === 'success' && res.user) {
+        loginWithUserData({
+          id: res.user.id || `usr-${Date.now()}`,
+          name: res.user.name || email.split('@')[0].toUpperCase(),
+          email: res.user.email || email,
+          role: res.user.role || 'applicant',
+          isEmailVerified: true,
+          nis: res.user.nis,
+          nip: res.user.nip,
+          university: res.user.university || 'Universitas Ahmad Dahlan',
+          universityBadge: res.user.university_badge || 'UAD',
+          applicantStage: res.user.applicant_stage || '1_DRAFT_PROFILE',
+          applicantProfile: res.user.role === 'applicant' ? {
+            fullName: res.user.name,
+            nik: '3404012004050001',
+            phone: res.user.phone || '081234567890',
+            email: res.user.email || email,
+            university: res.user.university || 'Universitas Ahmad Dahlan',
+            universityBadge: res.user.university_badge || 'UAD',
+            faculty: 'Teknologi Industri',
+            major: res.user.major || 'Informatika',
+            semester: '2',
+            originCity: 'Yogyakarta',
+            hafalanCount: res.user.hafalan_count || '5',
+            targetJuz: res.user.target_juz || '30',
+            track: 'beasiswa_full',
+            quranExperience: 'Alumni SMA IT',
+            motivation: 'Konsisten murajaah & ziadah harian.',
+            ktpFile: res.user.ktp_filename || null,
+            ktmFile: res.user.ktm_filename || null,
+            photoFile: res.user.photo_filename || null,
+            verificationStatus: res.user.verification_status || 'pending',
+          } : undefined,
+          createdAt: new Date().toISOString().split('T')[0],
+        });
+        onClose();
+      } else {
+        login(email);
+        onClose();
+      }
+    } catch (err) {
+      console.warn('Backend login fallback:', err);
+      login(email);
+      onClose();
+    }
   };
 
   const handleQuickPreset = (

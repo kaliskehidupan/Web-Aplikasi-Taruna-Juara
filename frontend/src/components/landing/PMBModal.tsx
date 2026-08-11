@@ -73,7 +73,17 @@ export const PMBModal: React.FC<PMBModalProps> = ({ isOpen, onClose }) => {
   const handleRealFileUpload = (fieldName: 'ktpFile' | 'ktmFile', e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, [fieldName]: file.name }));
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        const base64Str = result.includes(',') ? result.split(',')[1] : result;
+        setFormData((prev: any) => ({
+          ...prev,
+          [fieldName]: file.name,
+          [`${fieldName}_base64`]: base64Str,
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 

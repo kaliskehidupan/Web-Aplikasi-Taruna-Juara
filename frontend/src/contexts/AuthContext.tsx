@@ -5,6 +5,7 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, role?: UserRole) => void;
+  loginWithUserData: (userData: User) => void;
   register: (name: string, email: string) => { verificationCode: string };
   verifyEmail: (code: string) => boolean;
   logout: () => void;
@@ -147,6 +148,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     setUser(loggedUser);
+  };
+
+  const loginWithUserData = (userData: User) => {
+    setUser(userData);
   };
 
   const logout = () => {
@@ -414,6 +419,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         isAuthenticated: !!user,
         login,
+        loginWithUserData,
         register,
         verifyEmail,
         logout,

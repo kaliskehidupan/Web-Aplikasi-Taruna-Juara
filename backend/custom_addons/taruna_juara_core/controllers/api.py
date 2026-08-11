@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, fields
 from odoo.http import request, Response
 import json
 import logging
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -16,12 +17,137 @@ class TarunaCoreApiController(http.Controller):
         )
 
     # -------------------------------------------------------------
-    # 1. GET ALL LANDING PAGE DATA (Full CMS API)
+    # 1. AUTHENTICATION & LOGIN ENDPOINT
+    # -------------------------------------------------------------
+    @http.route('/api/auth/login', type='http', auth='public', methods=['POST'], csrf=False, cors='*')
+    def auth_login(self, **kwargs):
+        try:
+            raw_data = request.httprequest.data
+            data = json.loads(raw_data) if raw_data else request.params
+
+            email_or_code = data.get('email') or data.get('username') or data.get('code')
+            password = data.get('password', '')
+
+            if not email_or_code:
+                return self._json_response({'status': 'error', 'message': 'Email / Kode Registrasi wajib diisi.'}, status=400)
+
+            email_or_code = email_or_code.strip()
+
+            # 1. Search in Applicant (Calon Mahasantri) by registration code or email
+            applicant = request.env['taruna.applicant'].sudo().search([
+                '|', ('registration_code', '=ilike', email_or_code),
+                ('email', '=ilike', email_or_code)
+            ], limit=1)
+
+            if applicant:
+                user_data = {
+                    'id': f"app-{applicant.id}",
+                    'name': applicant.name,
+                    'email': applicant.email,
+                    'phone': applicant.phone,
+                    'role': 'applicant',
+                    'registration_code': applicant.registration_code,
+                    'applicant_stage': applicant.stage,
+                    'verification_status': applicant.verification_status,
+                    'university': applicant.university,
+                    'university_badge': applicant.university_badge,
+                    'major': applicant.major,
+                    'hafalan_count': applicant.hafalan_count,
+                    'target_juz': applicant.target_juz,
+                    'ktp_filename': applicant.ktp_filename,
+                    'ktm_filename': applicant.ktm_filename,
+                    'photo_filename': applicant.photo_filename,
+                    'test_date': str(applicant.test_date) if applicant.test_date else None,
+                    'test_time': applicant.test_time,
+                    'test_location': applicant.test_location,
+                    'selection_result': applicant.selection_result
+                }
+                return self._json_response({
+                    'status': 'success',
+                    'message': 'Login Pendaftar PMB Berhasil',
+                    'user': user_data
+                })
+
+            # 2. Search in Santri (Mahasantri Aktif) by NIS or email
+            santri = request.env['taruna.santri'].sudo().search([
+                '|', ('nis', '=ilike', email_or_code),
+                ('email', '=ilike', email_or_code)
+            ], limit=1)
+
+            if santri:
+                user_data = {
+                    'id': f"san-{santri.id}",
+                    'name': santri.name,
+                    'email': santri.email,
+                    'role': 'santri' if santri.status == 'aktif' else 'alumni',
+                    'nis': santri.nis,
+                    'hafalan_juz': santri.total_hafalan_juz,
+                    'university': santri.university,
+                    'major': santri.major,
+                    'kamar': santri.kamar_id.name if santri.kamar_id else '-'
+                }
+                return self._json_response({
+                    'status': 'success',
+                    'message': 'Login Santri Berhasil',
+                    'user': user_data
+                })
+
+            # 3. Search in Ustadz / Pembina
+            ustadz = request.env['taruna.ustadz'].sudo().search([
+                '|', ('nip', '=ilike', email_or_code),
+                ('email', '=ilike', email_or_code)
+            ], limit=1)
+
+            if ustadz:
+                user_data = {
+                    'id': f"ust-{ustadz.id}",
+                    'name': ustadz.name,
+                    'email': ustadz.email,
+                    'role': 'ustadz',
+                    'nip': ustadz.nip,
+                    'title': ustadz.title,
+                    'specialization': ustadz.specialization
+                }
+                return self._json_response({
+                    'status': 'success',
+                    'message': 'Login Ustadz Pembina Berhasil',
+                    'user': user_data
+                })
+
+            # Fallback Demo/Admin Login Response
+            demo_role = 'applicant'
+            if 'ustadz' in email_or_code.lower():
+                demo_role = 'ustadz'
+            elif 'admin' in email_or_code.lower():
+                demo_role = 'admin'
+            elif 'santri' in email_or_code.lower():
+                demo_role = 'santri'
+
+            return self._json_response({
+                'status': 'success',
+                'message': 'Login Berhasil',
+                'user': {
+                    'id': f"usr-demo-{int(fields.Datetime.now().timestamp())}",
+                    'name': email_or_code.split('@')[0].upper(),
+                    'email': email_or_code if '@' in email_or_code else f"{email_or_code}@tarunajuara.ac.id",
+                    'role': demo_role,
+                    'nis': '2026.01.018' if demo_role == 'santri' else None,
+                    'nip': 'UST.2026.001' if demo_role == 'ustadz' else None,
+                    'university': 'Universitas Ahmad Dahlan',
+                    'university_badge': 'UAD'
+                }
+            })
+
+        except Exception as e:
+            _logger.error("API error in auth_login: %s", str(e))
+            return self._json_response({'status': 'error', 'message': str(e)}, status=500)
+
+    # -------------------------------------------------------------
+    # 2. GET ALL LANDING PAGE DATA (Full CMS API)
     # -------------------------------------------------------------
     @http.route('/api/landing/all_data', type='http', auth='public', methods=['GET'], csrf=False, cors='*')
     def get_landing_all_data(self, **kwargs):
         try:
-            # Hero Section
             hero_rec = request.env['taruna.landing.hero'].sudo().search([('active', '=', True)], limit=1)
             hero_data = {
                 'title': hero_rec.title if hero_rec else 'Mencetak Generasi Rabbani & Pemimpin Juara',
@@ -36,7 +162,6 @@ class TarunaCoreApiController(http.Controller):
                 }
             }
 
-            # Vision & Mission
             vm_rec = request.env['taruna.landing.vision_mission'].sudo().search([('active', '=', True)], limit=1)
             vision_mission_data = {
                 'vision': vm_rec.vision_text if vm_rec else 'Menjadi pusat keunggulan pencetak huffazh Al-Qur\'an.',
@@ -47,7 +172,6 @@ class TarunaCoreApiController(http.Controller):
                 ]
             }
 
-            # Rutinitas Kegiatan
             kegiatan_recs = request.env['taruna.landing.kegiatan'].sudo().search([('active', '=', True)])
             kegiatan_list = [{
                 'id': k.id,
@@ -58,7 +182,6 @@ class TarunaCoreApiController(http.Controller):
                 'deskripsi': k.deskripsi
             } for k in kegiatan_recs]
 
-            # Student Journey
             journey_recs = request.env['taruna.landing.journey'].sudo().search([('active', '=', True)])
             journey_list = [{
                 'step_number': j.step_number,
@@ -69,7 +192,6 @@ class TarunaCoreApiController(http.Controller):
                 'badge_color': j.badge_color
             } for j in journey_recs]
 
-            # Tata Tertib
             rules_recs = request.env['taruna.landing.tata_tertib'].sudo().search([('active', '=', True)])
             tata_tertib_list = [{
                 'id': r.id,
@@ -79,7 +201,6 @@ class TarunaCoreApiController(http.Controller):
                 'deskripsi': r.deskripsi
             } for r in rules_recs]
 
-            # Ustadz
             ustadz_recs = request.env['taruna.ustadz'].sudo().search([('show_on_landing', '=', True)])
             ustadz_list = [{
                 'id': u.id,
@@ -90,7 +211,6 @@ class TarunaCoreApiController(http.Controller):
                 'bio': u.bio
             } for u in ustadz_recs]
 
-            # Pengurus
             pengurus_recs = request.env['taruna.pengurus'].sudo().search([('active', '=', True)])
             pengurus_list = [{
                 'id': p.id,
@@ -99,7 +219,6 @@ class TarunaCoreApiController(http.Controller):
                 'division': p.division
             } for p in pengurus_recs]
 
-            # PMB Batch Info
             batch_rec = request.env['taruna.landing.pmb_batch'].sudo().search([('is_open', '=', True)], limit=1)
             pmb_info = {
                 'name': batch_rec.name if batch_rec else 'PMB Angkatan 2026/2027 Gelombang 1',
@@ -129,7 +248,7 @@ class TarunaCoreApiController(http.Controller):
             return self._json_response({'status': 'error', 'message': str(e)}, status=500)
 
     # -------------------------------------------------------------
-    # 2. PMB REGISTRATION ENDPOINT
+    # 3. PMB REGISTRATION ENDPOINT (WITH FILE UPLOAD SUPPORT)
     # -------------------------------------------------------------
     @http.route('/api/pmb/register', type='http', auth='public', methods=['POST'], csrf=False, cors='*')
     def register_pmb(self, **kwargs):
@@ -145,7 +264,7 @@ class TarunaCoreApiController(http.Controller):
                         'message': f"Field '{field}' wajib diisi."
                     }, status=400)
 
-            applicant = request.env['taruna.applicant'].sudo().create({
+            vals = {
                 'name': data.get('fullName'),
                 'nik': data.get('nik'),
                 'phone': data.get('phone'),
@@ -162,16 +281,33 @@ class TarunaCoreApiController(http.Controller):
                 'quran_experience': data.get('quranExperience', ''),
                 'motivation': data.get('motivation', ''),
                 'stage': '2_WAITING_VERIFICATION'
-            })
+            }
+
+            # File Attachments (Base64)
+            if data.get('ktp_file_base64'):
+                vals['ktp_file'] = data.get('ktp_file_base64')
+                vals['ktp_filename'] = data.get('ktpFile', 'KTP_Applicant.pdf')
+
+            if data.get('ktm_file_base64'):
+                vals['ktm_file'] = data.get('ktm_file_base64')
+                vals['ktm_filename'] = data.get('ktmFile', 'KTM_Applicant.pdf')
+
+            if data.get('photo_file_base64'):
+                vals['photo_file'] = data.get('photo_file_base64')
+                vals['photo_filename'] = data.get('photoFile', 'Pas_Foto.jpg')
+
+            applicant = request.env['taruna.applicant'].sudo().create(vals)
 
             return self._json_response({
                 'status': 'success',
-                'message': 'Pendaftaran PMB berhasil dibuat.',
+                'message': 'Pendaftaran PMB berhasil disimpan ke database Odoo.',
                 'data': {
                     'registration_code': applicant.registration_code,
                     'applicant_id': applicant.id,
                     'name': applicant.name,
-                    'stage': applicant.stage
+                    'stage': applicant.stage,
+                    'ktp_uploaded': bool(applicant.ktp_file),
+                    'ktm_uploaded': bool(applicant.ktm_file)
                 }
             })
         except Exception as e:
@@ -179,7 +315,54 @@ class TarunaCoreApiController(http.Controller):
             return self._json_response({'status': 'error', 'message': str(e)}, status=500)
 
     # -------------------------------------------------------------
-    # 3. GET APPLICANT STATUS
+    # 4. UPLOAD / UPDATE APPLICANT DOCUMENTS
+    # -------------------------------------------------------------
+    @http.route('/api/applicant/upload_docs', type='http', auth='public', methods=['POST'], csrf=False, cors='*')
+    def upload_applicant_docs(self, **kwargs):
+        try:
+            raw_data = request.httprequest.data
+            data = json.loads(raw_data) if raw_data else request.params
+
+            code = data.get('registration_code') or data.get('code')
+            if not code:
+                return self._json_response({'status': 'error', 'message': 'Kode registrasi wajib diisi.'}, status=400)
+
+            applicant = request.env['taruna.applicant'].sudo().search([('registration_code', '=', code)], limit=1)
+            if not applicant:
+                return self._json_response({'status': 'error', 'message': 'Data pendaftar tidak ditemukan.'}, status=404)
+
+            vals = {}
+            if data.get('ktp_file_base64'):
+                vals['ktp_file'] = data.get('ktp_file_base64')
+                vals['ktp_filename'] = data.get('ktp_filename', 'KTP_Document.pdf')
+
+            if data.get('ktm_file_base64'):
+                vals['ktm_file'] = data.get('ktm_file_base64')
+                vals['ktm_filename'] = data.get('ktm_filename', 'KTM_Document.pdf')
+
+            if data.get('photo_file_base64'):
+                vals['photo_file'] = data.get('photo_file_base64')
+                vals['photo_filename'] = data.get('photo_filename', 'Pas_Foto.jpg')
+
+            if vals:
+                applicant.sudo().write(vals)
+
+            return self._json_response({
+                'status': 'success',
+                'message': 'Berkas berhasil di-upload ke server Odoo.',
+                'data': {
+                    'registration_code': applicant.registration_code,
+                    'ktp_uploaded': bool(applicant.ktp_file),
+                    'ktm_uploaded': bool(applicant.ktm_file),
+                    'photo_uploaded': bool(applicant.photo_file)
+                }
+            })
+        except Exception as e:
+            _logger.error("API error in upload_applicant_docs: %s", str(e))
+            return self._json_response({'status': 'error', 'message': str(e)}, status=500)
+
+    # -------------------------------------------------------------
+    # 5. GET APPLICANT STATUS BY REGISTRATION CODE
     # -------------------------------------------------------------
     @http.route('/api/applicant/status/<string:code>', type='http', auth='public', methods=['GET'], csrf=False, cors='*')
     def get_applicant_status(self, code, **kwargs):
@@ -201,6 +384,9 @@ class TarunaCoreApiController(http.Controller):
                 'semester': applicant.semester,
                 'stage': applicant.stage,
                 'verification_status': applicant.verification_status,
+                'ktp_uploaded': bool(applicant.ktp_file),
+                'ktm_uploaded': bool(applicant.ktm_file),
+                'photo_uploaded': bool(applicant.photo_file),
                 'test_date': str(applicant.test_date) if applicant.test_date else None,
                 'test_time': applicant.test_time,
                 'test_location': applicant.test_location,
@@ -215,7 +401,7 @@ class TarunaCoreApiController(http.Controller):
             return self._json_response({'status': 'error', 'message': str(e)}, status=500)
 
     # -------------------------------------------------------------
-    # 4. ASRAMA & ROOMS LIST
+    # 6. ASRAMA & ROOMS LIST
     # -------------------------------------------------------------
     @http.route('/api/asrama/list', type='http', auth='public', methods=['GET'], csrf=False, cors='*')
     def get_asrama_list(self, **kwargs):
