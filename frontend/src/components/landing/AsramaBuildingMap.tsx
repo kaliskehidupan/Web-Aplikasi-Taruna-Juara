@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Home, Sparkles, ArrowUpRight } from 'lucide-react';
 import { KamarDetailModal, RoomData } from './KamarDetailModal';
+import { apiService } from '../../api/client';
 
 interface AsramaBuildingMapProps {
   onOpenPMB: () => void;
@@ -9,6 +10,18 @@ interface AsramaBuildingMapProps {
 
 export const AsramaBuildingMap: React.FC<AsramaBuildingMapProps> = ({ onOpenPMB }) => {
   const [selectedRoom, setSelectedRoom] = useState<RoomData | null>(null);
+  const [liveRoomsData, setLiveRoomsData] = useState<any[]>([]);
+
+  useEffect(() => {
+    apiService.getAsramaList().then(res => {
+      if (res && res.status === 'success' && res.data) {
+        setLiveRoomsData(res.data);
+        console.log('Live Odoo Asrama Data Loaded:', res.data.length, 'buildings');
+      }
+    }).catch(err => {
+      console.warn('Using default rooms layout while Odoo loads:', err);
+    });
+  }, [liveRoomsData.length]);
 
   // 11 Kamar Total (5 di Lantai 2 / Atas, 6 di Lantai 1 / Bawah)
   const rooms: RoomData[] = [

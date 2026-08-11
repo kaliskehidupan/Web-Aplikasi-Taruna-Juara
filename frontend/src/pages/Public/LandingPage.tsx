@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from '../../contexts/AuthContext';
 import { Navbar } from '../../components/common/Navbar';
-import { UserStatusBanner } from '../../components/auth/UserStatusBanner';
 import { AuthModal } from '../../components/auth/AuthModal';
 import { ApplicantPortalPage } from '../Portal/ApplicantPortalPage';
 import { HeroSection } from '../../components/landing/HeroSection';
@@ -17,14 +16,36 @@ import { PMBModal } from '../../components/landing/PMBModal';
 import { Footer } from '../../components/common/Footer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, GraduationCap, UserCheck, Sparkles, ShieldCheck } from 'lucide-react';
+import { apiService } from '../../api/client';
 
 export const LandingContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const [isPMBOpen, setIsPMBOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
-
   const [activePortalDemo, setActivePortalDemo] = useState<'santri' | 'ustadz' | 'alumni' | 'admin' | null>(null);
+
+  // Dynamic Odoo CMS State
+  const [cmsData, setCmsData] = useState<{
+    hero?: any;
+    vision_mission?: any;
+    kegiatan?: any[];
+    journey?: any[];
+    tata_tertib?: any[];
+    ustadz?: any[];
+    pengurus?: any[];
+    pmb_info?: any;
+  }>({});
+
+  useEffect(() => {
+    apiService.getLandingAllData().then(res => {
+      if (res && res.status === 'success' && res.data) {
+        setCmsData(res.data);
+      }
+    }).catch(err => {
+      console.warn('Odoo CMS API fetch fallback to default theme content:', err);
+    });
+  }, []);
 
   const handleExplorePrograms = () => {
     const section = document.getElementById('dormitory');
@@ -40,7 +61,6 @@ export const LandingContent: React.FC = () => {
     }
   };
 
-  // IF USER IS AUTHENTICATED (LOGGED IN): DIRECTLY SHOW THE PORTAL APPLICATION VIEW!
   if (isAuthenticated) {
     return <ApplicantPortalPage />;
   }
@@ -53,29 +73,22 @@ export const LandingContent: React.FC = () => {
         onOpenPortal={(portalType) => setActivePortalDemo(portalType)}
       />
 
-      {/* Persistent User Lifecycle Status & Simulation Controls Bar */}
-      <div className="pt-20">
-        <UserStatusBanner />
-      </div>
-
       {/* Main Page Sections */}
-      <main>
+      <main className="pt-16">
         <HeroSection
+          heroData={cmsData.hero}
           onOpenPMB={handlePMBClick}
           onExplorePrograms={handleExplorePrograms}
         />
         <AsramaBuildingMap
           onOpenPMB={handlePMBClick}
         />
-        <VisionMissionSection />
-        <TataTertibSection />
-        
-        {/* Penempatan Pemilik Asrama, Ustadz & Musyrif DI ATAS Struktur Kepengurusan */}
-        <UstadzPengasuhSection />
-        
-        <StrukturKepengurusanSection />
-        <KegiatanSection />
-        <StudentJourneySection />
+        <VisionMissionSection visionMissionData={cmsData.vision_mission} />
+        <TataTertibSection tataTertibList={cmsData.tata_tertib} />
+        <UstadzPengasuhSection ustadzList={cmsData.ustadz} />
+        <StrukturKepengurusanSection pengurusList={cmsData.pengurus} />
+        <KegiatanSection kegiatanList={cmsData.kegiatan} />
+        <StudentJourneySection journeyList={cmsData.journey} />
         <PortalPreviewSection
           onOpenPortal={(portalType) => setActivePortalDemo(portalType)}
         />
@@ -93,7 +106,7 @@ export const LandingContent: React.FC = () => {
         initialMode={authModalMode}
       />
 
-      {/* Portal Demo Interactive Modal */}
+      {/* Portal Demo Preview Modal */}
       <AnimatePresence>
         {activePortalDemo && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/80 backdrop-blur-md">

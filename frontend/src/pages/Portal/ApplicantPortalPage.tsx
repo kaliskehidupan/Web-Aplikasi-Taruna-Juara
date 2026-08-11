@@ -19,10 +19,10 @@ import {
   Check,
   Award,
   Copy,
-  ChevronRight,
   Search,
   BookOpen,
 } from 'lucide-react';
+import { apiService } from '../../api/client';
 import { useAuth } from '../../contexts/AuthContext';
 import { ApplicantProfile } from '../../types/auth';
 
@@ -59,34 +59,35 @@ const INDONESIA_UNIVERSITIES = [
   { name: 'Universitas Muhammadiyah Surakarta (UMS)', badge: 'UMS', city: 'Surakarta' },
   { name: 'Universitas Negeri Semarang (UNNES)', badge: 'UNNES', city: 'Semarang' },
   { name: 'Universitas Jenderal Soedirman (UNSOED)', badge: 'UNSOED', city: 'Purwokerto' },
-  { name: 'UIN Walisongo Semarang', badge: 'UIN-WS', city: 'Semarang' },
-  { name: 'Universitas Islam Sultan Agung (UNISSULA)', badge: 'UNISSULA', city: 'Semarang' },
+  { name: 'Universitas Islam Negeri Walisongo', badge: 'WALISONGO', city: 'Semarang' },
+  { name: 'Universitas Sultan Agung (UNISSULA)', badge: 'UNISSULA', city: 'Semarang' },
+  { name: 'Universitas Pekalongan (UNIKAL)', badge: 'UNIKAL', city: 'Pekalongan' },
+  { name: 'Universitas Tidar (UNTIDAR)', badge: 'UNTIDAR', city: 'Magelang' },
 
-  // DKI Jakarta, Jawa Barat, Banten
-  { name: 'Universitas Indonesia (UI)', badge: 'UI', city: 'Depok / Jakarta' },
+  // Jawa Barat, DKI Jakarta, Banten
   { name: 'Institut Teknologi Bandung (ITB)', badge: 'ITB', city: 'Bandung' },
-  { name: 'Universitas Padjadjaran (UNPAD)', badge: 'UNPAD', city: 'Sumedang / Bandung' },
-  { name: 'IPB University (Institut Pertanian Bogor)', badge: 'IPB', city: 'Bogor' },
-  { name: 'Universitas Telkom (Telkom University)', badge: 'TELKOM', city: 'Bandung' },
+  { name: 'Universitas Indonesia (UI)', badge: 'UI', city: 'Depok' },
+  { name: 'Universitas Padjadjaran (UNPAD)', badge: 'UNPAD', city: 'Bandung' },
+  { name: 'IPB University (IPB)', badge: 'IPB', city: 'Bogor' },
+  { name: 'Universitas Pendidikan Indonesia (UPI)', badge: 'UPI', city: 'Bandung' },
+  { name: 'Telkom University (TEL-U)', badge: 'TEL-U', city: 'Bandung' },
   { name: 'UIN Syarif Hidayatullah Jakarta', badge: 'UIN-JKT', city: 'Jakarta' },
   { name: 'Universitas Negeri Jakarta (UNJ)', badge: 'UNJ', city: 'Jakarta' },
-  { name: 'Universitas Trisakti', badge: 'TRISAKTI', city: 'Jakarta' },
+  { name: 'Universitas Pembangunan Nasional "Veteran" Jakarta (UPNVJ)', badge: 'UPNVJ', city: 'Jakarta' },
   { name: 'Universitas Bina Nusantara (BINUS)', badge: 'BINUS', city: 'Jakarta' },
+  { name: 'Universitas Trisakti', badge: 'TRISAKTI', city: 'Jakarta' },
 
-  // Jawa Timur & Lainnya
+  // Jawa Timur & Luar Jawa
+  { name: 'Universitas Brawijaya (UB)', badge: 'UB', city: 'Malang' },
   { name: 'Universitas Airlangga (UNAIR)', badge: 'UNAIR', city: 'Surabaya' },
   { name: 'Institut Teknologi Sepuluh Nopember (ITS)', badge: 'ITS', city: 'Surabaya' },
-  { name: 'Universitas Brawijaya (UB)', badge: 'UB', city: 'Malang' },
   { name: 'Universitas Negeri Malang (UM)', badge: 'UM', city: 'Malang' },
-  { name: 'UIN Maulana Malik Ibrahim Malang', badge: 'UIN-MLG', city: 'Malang' },
   { name: 'Universitas Jember (UNEJ)', badge: 'UNEJ', city: 'Jember' },
-
-  // Luar Jawa Prominen
-  { name: 'Universitas Lampung (UNILA)', badge: 'UNILA', city: 'Bandar Lampung' },
-  { name: 'Universitas Sriwijaya (UNSRI)', badge: 'UNSRI', city: 'Palembang' },
-  { name: 'Universitas Sumatera Utara (USU)', badge: 'USU', city: 'Medan' },
+  { name: 'UIN Maulana Malik Ibrahim Malang', badge: 'UIN-MLG', city: 'Malang' },
+  { name: 'Universitas Hassanuddin (UNHAS)', badge: 'UNHAS', city: 'Makassar' },
   { name: 'Universitas Andalas (UNAND)', badge: 'UNAND', city: 'Padang' },
-  { name: 'Universitas Hasanuddin (UNHAS)', badge: 'UNHAS', city: 'Makassar' },
+  { name: 'Universitas Sumatera Utara (USU)', badge: 'USU', city: 'Medan' },
+  { name: 'Universitas Sriwijaya (UNSRI)', badge: 'UNSRI', city: 'Palembang' },
   { name: 'Universitas Udayana (UNUD)', badge: 'UNUD', city: 'Denpasar' },
   { name: 'Universitas Mulawarman (UNMUL)', badge: 'UNMUL', city: 'Samarinda' },
 ];
@@ -96,12 +97,35 @@ export const ApplicantPortalPage: React.FC = () => {
     user,
     logout,
     submitApplicantProfile,
-    simulateAdminApproveFiles,
-    simulateAdminPassSelection,
     confirmCheckInAndConvertToSantri,
   } = useAuth();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'test' | 'result' | 'checkin'>('profile');
+  const [checkInDate, setCheckInDate] = useState('1 September 2026');
+  const [copiedNis, setCopiedNis] = useState(false);
+
+  // Live Odoo Search State
+  const [searchRegCode, setSearchRegCode] = useState('');
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [liveApplicantData, setLiveApplicantData] = useState<any>(null);
+
+  const handleSearchCode = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchRegCode.trim()) return;
+    setSearchLoading(true);
+    try {
+      const res = await apiService.getApplicantStatus(searchRegCode.trim());
+      if (res && res.status === 'success' && res.data) {
+        setLiveApplicantData(res.data);
+      } else {
+        alert('Kode pendaftaran tidak ditemukan di server Odoo.');
+      }
+    } catch (err) {
+      alert('Gagal mengambil data dari server Odoo: ' + err);
+    } finally {
+      setSearchLoading(false);
+    }
+  };
 
   // Form State initialized from user profile
   const p = user?.applicantProfile;
@@ -131,9 +155,6 @@ export const ApplicantPortalPage: React.FC = () => {
   const [univSearchQuery, setUnivSearchQuery] = useState<string>(formData.university);
   const [showUnivSuggestions, setShowUnivSuggestions] = useState<boolean>(false);
   const univWrapperRef = useRef<HTMLDivElement>(null);
-
-  const [checkInDate, setCheckInDate] = useState<string>('1 September 2026');
-  const [copiedNis, setCopiedNis] = useState<boolean>(false);
 
   // Close suggestions when clicking outside
   useEffect(() => {
@@ -292,6 +313,41 @@ export const ApplicantPortalPage: React.FC = () => {
 
       {/* MAIN APPLICATION WORKSPACE */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Live Odoo Registration Search Bar */}
+        <div className="bg-white p-4 sm:p-6 rounded-3xl border border-neutral-200 shadow-md mb-8">
+          <form onSubmit={handleSearchCode} className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="flex-1 relative w-full">
+              <Search className="w-5 h-5 text-neutral-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchRegCode}
+                onChange={(e) => setSearchRegCode(e.target.value)}
+                placeholder="Masukkan Kode Registrasi PMB (Contoh: PMB-2026-TJ-1881)..."
+                className="w-full pl-12 pr-4 py-3 rounded-2xl bg-neutral-50 border border-neutral-300 font-mono text-sm font-bold text-neutral-900 focus:ring-2 focus:ring-[#D93829]"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={searchLoading}
+              className="w-full sm:w-auto px-6 py-3 bg-neutral-900 hover:bg-[#D93829] text-white text-xs font-extrabold rounded-2xl transition-colors flex items-center justify-center gap-2 shadow-md shrink-0"
+            >
+              {searchLoading ? 'Mencari...' : 'Cek Status Live Odoo'}
+            </button>
+          </form>
+
+          {liveApplicantData && (
+            <div className="mt-4 p-4 bg-amber-50 rounded-2xl border border-amber-200 text-xs text-neutral-800 flex items-center justify-between">
+              <div>
+                <span className="font-bold text-[#D93829]">Status Live Odoo:</span> {liveApplicantData.name} ({liveApplicantData.registration_code}) — Stage: <strong className="uppercase">{liveApplicantData.stage}</strong>
+              </div>
+              <span className="px-3 py-1 bg-emerald-600 text-white rounded-full font-bold text-[10px]">
+                {liveApplicantData.verification_status}
+              </span>
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
           {/* LEFT SIDEBAR: USER STATUS & TIMELINE PROGRESS */}
@@ -396,39 +452,7 @@ export const ApplicantPortalPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Admin Simulation Box for Fast Testing */}
-            <div className="bg-neutral-900 text-white p-5 rounded-3xl shadow-xl space-y-3 border border-neutral-800">
-              <div className="text-[10px] font-black text-amber-400 uppercase tracking-wider flex items-center justify-between">
-                <span>⚡ Kontrol Simulasi Admin:</span>
-                <span>Demo Test</span>
-              </div>
-              
-              <div className="space-y-2 text-xs">
-                <button
-                  onClick={simulateAdminApproveFiles}
-                  className="w-full py-2 px-3 bg-amber-500 hover:bg-amber-600 text-neutral-950 font-black rounded-xl transition-colors text-left flex items-center justify-between"
-                >
-                  <span>1. Simulasi ACC Berkas oleh Admin</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
 
-                <button
-                  onClick={() => simulateAdminPassSelection(true)}
-                  className="w-full py-2 px-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-xl transition-colors text-left flex items-center justify-between"
-                >
-                  <span>2. Simulasi Diterima Seleksi Offline</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => confirmCheckInAndConvertToSantri('1 September 2026')}
-                  className="w-full py-2 px-3 bg-[#D93829] hover:bg-[#b8291b] text-white font-black rounded-xl transition-colors text-left flex items-center justify-between"
-                >
-                  <span>3. Masuk Asrama ➔ Otomatis Santri</span>
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
 
           </div>
 
@@ -880,12 +904,7 @@ export const ApplicantPortalPage: React.FC = () => {
                       <p className="text-xs text-neutral-600 font-medium leading-relaxed max-w-md mx-auto">
                         Jadwal tes seleksi offline (Wawancara & Tahsin Al-Qur'an) akan otomatis diterbitkan di halaman ini setelah berkas Anda disetujui tim seleksi.
                       </p>
-                      <button
-                        onClick={simulateAdminApproveFiles}
-                        className="px-6 py-3 bg-[#D93829] text-white font-black text-xs rounded-2xl shadow-lg"
-                      >
-                        ⚡ Simulasi ACC Berkas oleh Admin ➔
-                      </button>
+
                     </div>
                   ) : (
                     <div className="bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 text-white p-8 rounded-3xl border-2 border-amber-400 shadow-2xl space-y-6 relative overflow-hidden">

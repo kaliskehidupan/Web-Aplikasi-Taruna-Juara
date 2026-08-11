@@ -1,131 +1,86 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Image as ImageIcon, ArrowUpRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Clock } from 'lucide-react';
 
-interface ActivityItem {
-  id: string;
-  category: 'tahfidz' | 'krt' | 'media' | 'psdm';
-  categoryLabel: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  schedule: string;
-  placeholderText: string;
-  accentColor: string;
+interface KegiatanItem {
+  id: number | string;
+  name: string;
+  jam_mulai: string;
+  jam_selesai?: string;
+  kategori: string;
+  deskripsi?: string;
 }
 
-export const KegiatanSection: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [activeModalItem, setActiveModalItem] = useState<ActivityItem | null>(null);
+interface KegiatanSectionProps {
+  kegiatanList?: KegiatanItem[];
+}
 
-  const activities: ActivityItem[] = [
-    {
-      id: 'act-1',
-      category: 'tahfidz',
-      categoryLabel: 'Program Tahfidz Core',
-      title: 'Halaqah Ziadah & Setoran Harian',
-      subtitle: 'Target 1 Halaman / Hari',
-      description: 'Kegiatan utama pembinaan hafalan Al-Qur\'an setiap bada Subuh & bada Maghrib. Didampingi Ustadz pengampu dengan metode penyetoran terstruktur.',
-      schedule: 'Setiap Hari (Subuh & Maghrib)',
-      placeholderText: 'Upload Foto Kegiatan Setoran Ziadah di Sini',
-      accentColor: 'from-[#D93829] to-[#EA580C]',
-    },
-    {
-      id: 'act-2',
-      category: 'tahfidz',
-      categoryLabel: 'Program Tahfidz Core',
-      title: 'Ujian Tasmi\' Bil Ghaib 1 - 30 Juz',
-      subtitle: 'Milestone Kelancaran Hafalan',
-      description: 'Ujian pembuktian hafalan secara sekali duduk (1 Juz, 5 Juz, 10 Juz, hingga 30 Juz) di hadapan penguji dan disaksikan para mahasantri.',
-      schedule: 'Mingguan & Bulanan',
-      placeholderText: 'Upload Foto Ujian Tasmi\' Mahasantri di Sini',
-      accentColor: 'from-amber-600 to-orange-500',
-    },
-    {
-      id: 'act-3',
-      category: 'krt',
-      categoryLabel: 'Divisi KRT (Keasramaan)',
-      title: 'Kebersihan & Ketertiban Asrama (KRT)',
-      subtitle: 'Nurturing Character & Discipline',
-      description: 'Pengelolaan lingkungan asrama, piket harian, pengawasan kedisiplinan, dan penyediaan fasilitas nyaman bagi seluruh mahasantri.',
-      schedule: 'Setiap Hari & Gotong Royong Pekan',
-      placeholderText: 'Upload Foto Kebersihan Asrama KRT di Sini',
-      accentColor: 'from-emerald-600 to-teal-500',
-    },
-    {
-      id: 'act-4',
-      category: 'media',
-      categoryLabel: 'Divisi Media Kreatif',
-      title: 'Production Content & Da\'wah Digital',
-      subtitle: 'Kreativitas & Syiar Media',
-      description: 'Pengelolaan media sosial, podcast Qur\'an, fotografi kegiatan, dan desain publikasi syiar Rumah Tahfidz Taruna Juara.',
-      schedule: 'Rutin Mingguan',
-      placeholderText: 'Upload Foto Tim Media Kreatif di Sini',
-      accentColor: 'from-sky-600 to-blue-500',
-    },
-    {
-      id: 'act-5',
-      category: 'psdm',
-      categoryLabel: 'Divisi PSDM',
-      title: 'Rihlah, Capacity Building & Silaturahmi',
-      subtitle: 'Pengembangan SDM & Ukhuwah',
-      description: 'Kegiatan pengembangan karakter, kajian keilmuan, keakraban mahasantri, serta forum silaturahmi alumni Taruna Juara.',
-      schedule: 'Bulanan',
-      placeholderText: 'Upload Foto Kegiatan Rihlah PSDM di Sini',
-      accentColor: 'from-[#D93829] to-amber-600',
-    },
-    {
-      id: 'act-6',
-      category: 'tahfidz',
-      categoryLabel: 'Program Tahfidz Core',
-      title: 'Murajaah Mandiri & Pasangan (Ziyadah Check)',
-      subtitle: 'Menjaga Kelancaran Hafalan',
-      description: 'Sesi khusus saling simak murajaah antarsantri untuk memperkuat hafalan surah-surah yang telah dihafalkan sebelumnya.',
-      schedule: 'Setiap Bada Ashar',
-      placeholderText: 'Upload Foto Murajaah Santri di Sini',
-      accentColor: 'from-[#D93829] to-[#EA580C]',
-    },
+export const KegiatanSection: React.FC<KegiatanSectionProps> = ({ kegiatanList }) => {
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+
+  const defaultKegiatan: KegiatanItem[] = [
+    { id: 1, jam_mulai: '04:00', jam_selesai: '05:30', name: 'Qiyamul Lail, Subuh Berjamaah & Zikir Ma\'tsurat', kategori: 'ibadah', deskripsi: 'Persiapan ibadah harian dan pembukaan ruhani santri.' },
+    { id: 2, jam_mulai: '05:30', jam_selesai: '07:00', name: 'Halaqah Tahfidz Subuh (Setoran Ziyadah)', kategori: 'tahfidz', deskripsi: 'Setoran hafalan baru per-halaman kepada Ustadz pembimbing.' },
+    { id: 3, jam_mulai: '07:00', jam_selesai: '16:00', name: 'Kuliah Perkuliahan di Kampus & Mandiri', kategori: 'akademik', deskripsi: 'Menghadiri jadwal perkuliahan resmi di kampus masing-masing.' },
+    { id: 4, jam_mulai: '16:30', jam_selesai: '17:45', name: 'Halaqah Murajaah Ashar & Tasmi\' Pasangan', kategori: 'tahfidz', deskripsi: 'Penguatan hafalan lama secara berpasangan dengan sesama mahasantri.' },
+    { id: 5, jam_mulai: '18:15', jam_selesai: '20:00', name: 'Maghrib Berjamaah, Kajian Kitab & Isya', kategori: 'ibadah', deskripsi: 'Pelajaran fiqh, adab, dan tafsir Al-Qur\'an bersama Pengasuh.' },
+    { id: 6, jam_mulai: '20:00', jam_selesai: '21:30', name: 'Belajar Mandiri, Diskusi & IT Mentoring', kategori: 'pengembangan', deskripsi: 'Pengembangan skill coding, kewirausahaan, dan tugas kampus.' },
+    { id: 7, jam_mulai: '21:30', jam_selesai: '03:45', name: 'Istirahat Malam & Sleep Protocol', kategori: 'istirahat', deskripsi: 'Waktu istirahat penuh untuk menjaga stamina jasmani.' },
   ];
 
-  const filteredActivities = selectedCategory === 'all'
-    ? activities
-    : activities.filter((a) => a.category === selectedCategory);
+  const listToDisplay = kegiatanList && kegiatanList.length > 0 ? kegiatanList : defaultKegiatan;
+
+  const filteredList = activeCategory === 'all' 
+    ? listToDisplay 
+    : listToDisplay.filter(k => k.kategori === activeCategory);
+
+  const getCategoryBadge = (cat: string) => {
+    switch (cat) {
+      case 'ibadah':
+        return <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">Ibadah &amp; Zikir</span>;
+      case 'tahfidz':
+        return <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Tahfidz &amp; Setoran</span>;
+      case 'akademik':
+        return <span className="px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-[10px] font-bold">Akademik Kampus</span>;
+      case 'pengembangan':
+        return <span className="px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-bold">Pengembangan Diri</span>;
+      default:
+        return <span className="px-2.5 py-0.5 rounded-full bg-neutral-100 text-neutral-800 text-[10px] font-bold">Istirahat</span>;
+    }
+  };
 
   return (
-    <section id="activities" className="py-24 bg-[#FAF6F0] relative">
+    <section id="kegiatan" className="py-20 bg-[#FAF6F0] relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div>
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D93829]/10 text-[#D93829] font-bold text-xs uppercase tracking-wider mb-3">
-              <Sparkles className="w-4 h-4" />
-              <span>Program & Aktivitas Rutin</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-900 tracking-tight">
-              Kegiatan <span className="text-[#D93829]">Taruna Juara</span>
-            </h2>
-          </div>
-          <p className="mt-4 md:mt-0 text-base text-neutral-600 font-medium max-w-md">
-            Rangkaian kegiatan harian, mingguan, dan bulanan yang dirancang untuk mendukung pembinaan tahfidz 30 Juz dan karakter kepemimpinan.
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <span className="px-4 py-1.5 rounded-full bg-[#D93829]/10 text-[#D93829] text-xs font-black uppercase tracking-wider inline-block mb-3">
+            Rutinitas Harian Mahasantri
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-neutral-900 tracking-tight mb-4">
+            Jadwal &amp; Agenda Kehidupan Asrama
+          </h2>
+          <p className="text-sm sm:text-base text-neutral-600 font-medium">
+            Kedisiplinan waktu adalah kunci sukses mahasantri dalam menyeimbangkan antara Hafalan 30 Juz dan prestasi di Bangku Kuliah.
           </p>
         </div>
 
         {/* Filter Buttons */}
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
           {[
-            { id: 'all', label: 'Semua Kegiatan' },
-            { id: 'tahfidz', label: 'Program Tahfidz' },
-            { id: 'krt', label: 'Divisi KRT (Asrama)' },
-            { id: 'media', label: 'Media Kreatif' },
-            { id: 'psdm', label: 'PSDM & Alumni' },
-          ].map((btn) => (
+            { key: 'all', label: 'Semua Agenda' },
+            { key: 'tahfidz', label: ' Tahfidz & Setoran' },
+            { key: 'ibadah', label: ' Ibadah & Zikir' },
+            { key: 'akademik', label: ' Akademik Kampus' },
+            { key: 'pengembangan', label: ' Skill & Mentoring' }
+          ].map(btn => (
             <button
-              key={btn.id}
-              onClick={() => setSelectedCategory(btn.id)}
-              className={`px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold transition-all ${
-                selectedCategory === btn.id
+              key={btn.key}
+              onClick={() => setActiveCategory(btn.key)}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all ${
+                activeCategory === btn.key
                   ? 'bg-neutral-900 text-white shadow-md'
-                  : 'bg-white text-neutral-700 hover:bg-neutral-200 border border-neutral-200'
+                  : 'bg-white text-neutral-600 hover:bg-neutral-200 border border-neutral-200/80'
               }`}
             >
               {btn.label}
@@ -133,113 +88,38 @@ export const KegiatanSection: React.FC = () => {
           ))}
         </div>
 
-        {/* Grid of Cards (Inspired by Reference UI Layout) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredActivities.map((act) => (
+        {/* Timeline Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredList.map((item, idx) => (
             <motion.div
-              layout
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              key={act.id}
-              onClick={() => setActiveModalItem(act)}
-              className="bg-white rounded-3xl p-5 border border-neutral-200/90 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col justify-between group cursor-pointer"
+              key={item.id || idx}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.05 }}
+              className="bg-white p-6 rounded-3xl border border-neutral-200/80 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden flex flex-col justify-between"
             >
               <div>
-                {/* Image Placeholder Box */}
-                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-neutral-800 flex flex-col items-center justify-center p-4 text-center text-white mb-5 group-hover:scale-[1.02] transition-transform">
-                  <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mb-2 text-amber-300">
-                    <ImageIcon className="w-6 h-6" />
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 text-xs font-black text-[#D93829] bg-[#D93829]/10 px-3 py-1 rounded-xl">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{item.jam_mulai} {item.jam_selesai ? `- ${item.jam_selesai}` : 'WIB'}</span>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-black/40 px-2.5 py-1 rounded-full mb-1">
-                    Ruang Foto Kegiatan
-                  </span>
-                  <span className="text-xs font-semibold text-neutral-300">
-                    {act.placeholderText}
-                  </span>
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md p-1.5 rounded-xl text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowUpRight className="w-4 h-4 text-[#D93829]" />
-                  </div>
+                  {getCategoryBadge(item.kategori)}
                 </div>
 
-                {/* Badge Category */}
-                <span className="inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider text-[#D93829] bg-[#D93829]/10 mb-3">
-                  {act.categoryLabel}
-                </span>
-
-                <h3 className="text-xl font-black text-neutral-900 mb-2 group-hover:text-[#D93829] transition-colors">
-                  {act.title}
+                <h3 className="text-base font-extrabold text-neutral-900 mb-2 leading-snug">
+                  {item.name}
                 </h3>
 
-                <p className="text-xs text-neutral-600 font-medium line-clamp-3 leading-relaxed mb-4">
-                  {act.description}
+                <p className="text-xs text-neutral-600 font-medium leading-relaxed mb-4">
+                  {item.deskripsi || 'Kegiatan terstruktur pembinaan mahasantri.'}
                 </p>
-              </div>
-
-              <div className="pt-4 border-t border-neutral-100 flex items-center justify-between">
-                <span className="text-[11px] font-bold text-neutral-400">
-                  {act.schedule}
-                </span>
-                <span className="text-xs font-extrabold text-[#D93829] flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Detail <ArrowUpRight className="w-3.5 h-3.5" />
-                </span>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
-
-      {/* Activity Detail Modal */}
-      <AnimatePresence>
-        {activeModalItem && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-neutral-900/60 backdrop-blur-sm">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-neutral-100 relative"
-            >
-              <button
-                onClick={() => setActiveModalItem(null)}
-                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 hover:bg-neutral-200 font-bold"
-              >
-                ✕
-              </button>
-
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold text-[#D93829] bg-[#D93829]/10 uppercase tracking-wider mb-3">
-                {activeModalItem.categoryLabel}
-              </span>
-
-              <h3 className="text-2xl font-black text-neutral-900 mb-2">
-                {activeModalItem.title}
-              </h3>
-              <p className="text-sm font-semibold text-[#D93829] mb-4">
-                {activeModalItem.subtitle}
-              </p>
-
-              {/* Large Image Placeholder inside Modal */}
-              <div className="aspect-video rounded-2xl bg-neutral-800 flex flex-col items-center justify-center p-4 text-center text-white mb-4">
-                <ImageIcon className="w-10 h-10 text-amber-300 mb-2" />
-                <span className="text-xs font-bold text-amber-300">
-                  {activeModalItem.placeholderText}
-                </span>
-                <span className="text-[10px] text-neutral-400 mt-1">
-                  Format disukai: JPG / PNG (Ratio 16:9)
-                </span>
-              </div>
-
-              <p className="text-sm text-neutral-700 leading-relaxed mb-6 font-medium">
-                {activeModalItem.description}
-              </p>
-
-              <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-200/80 flex items-center justify-between text-xs font-bold text-neutral-700">
-                <span>Jadwal Pelaksanaan:</span>
-                <span className="text-[#D93829]">{activeModalItem.schedule}</span>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
     </section>
   );
 };

@@ -1,126 +1,116 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { Target, Compass, Sparkles, BookOpen, ShieldCheck, HeartHandshake } from 'lucide-react';
+import { Target, Compass, ShieldCheck, HeartHandshake, Zap } from 'lucide-react';
 
-export const VisionMissionSection: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'visi' | 'misi' | 'pilar'>('visi');
+interface VisionMissionProps {
+  visionMissionData?: {
+    vision?: string;
+    missions?: string[];
+  };
+}
 
-  const misis = [
-    {
-      title: 'Pembinaan Tahfidz Interaktif & Terukur',
-      description: 'Menyelenggarakan sistem pengajaran Al-Qur\'an dengan target ziadah dan murajaah harian yang terpantau secara konsisten.',
-      icon: BookOpen,
-    },
-    {
-      title: 'Pengembangan Karakter & Kemandirian (KRT)',
-      description: 'Membentuk kedisiplinan, ukhuwah islamiyah, serta kebersihan dan keteraturan kehidupan asrama mahasantri.',
-      icon: ShieldCheck,
-    },
-    {
-      title: 'Pemberdayaan Media & Da\'wah Digital',
-      description: 'Melatih mahasantri dalam pembuatan konten media kreatif agar da\'wah Al-Qur\'an dapat menjangkau generasi muda.',
-      icon: Sparkles,
-    },
-    {
-      title: 'Pengembangan SDM & Jejaring Alumni (PSDM)',
-      description: 'Meningkatkan kapasitas kepemimpinan mahasantri serta merawat silaturahmi alumni yang berkelanjutan.',
-      icon: HeartHandshake,
-    },
+export const VisionMissionSection: React.FC<VisionMissionProps> = ({ visionMissionData }) => {
+  const vision = visionMissionData?.vision || 'Menjadi pusat keunggulan pencetak huffazh Al-Qur\'an 30 Juz yang berjiwa pemimpin Rabbani, mandiri, dan berdaya saing global pada tahun 2030.';
+  const missions = visionMissionData?.missions || [
+    'Menyelenggarakan pendidikan tahfidz Al-Qur\'an 30 Juz secara mutqin dengan pemahaman tafsir Rabbani.',
+    'Membentuk karakter kepemimpinan, kedisiplinan, dan etika Islam yang kuat berbasis ketaatan.',
+    'Mengembangkan potensi akademik, kewirausahaan, dan teknologi informasi mahasantri.'
   ];
 
   return (
-    <section id="vision" className="py-24 bg-white relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="vision-mission" className="py-20 bg-white relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#D93829]/10 text-[#D93829] font-bold text-xs uppercase tracking-wider mb-3">
-            <Compass className="w-4 h-4" />
-            <span>Arah & Landasan Lembaga</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-neutral-900 tracking-tight">
-            Visi & Misi <span className="text-[#D93829]">Taruna Juara</span>
+          <span className="px-4 py-1.5 rounded-full bg-[#D93829]/10 text-[#D93829] text-xs font-black uppercase tracking-wider inline-block mb-3">
+            Visi, Misi &amp; Core Values
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-neutral-900 tracking-tight mb-4">
+            Landasan Filosofis Pembinaan Mahasantri
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-neutral-600 font-medium">
-            Komitmen kami dalam melahirkan para penghafal Al-Qur'an yang tidak hanya kuat hafalannya, tetapi juga unggul secara karakter, kepemimpinan, dan kecakapan era digital.
+          <p className="text-sm sm:text-base text-neutral-600 font-medium">
+            Taruna Juara didirikan atas komitmen kokoh dalam mencetak hafizh Qur'an yang unggul di bidang akademis dan mandiri secara ekonomi.
           </p>
         </div>
 
-        {/* Tab Selection */}
-        <div className="flex justify-center mb-12">
-          <div className="inline-flex p-1.5 rounded-2xl bg-neutral-100 border border-neutral-200 shadow-inner">
-            <button
-              onClick={() => setActiveTab('visi')}
-              className={`px-6 py-3 rounded-xl text-sm font-extrabold transition-all ${
-                activeTab === 'visi'
-                  ? 'bg-[#D93829] text-white shadow-md'
-                  : 'text-neutral-600 hover:text-neutral-900'
-              }`}
-            >
-              Visi Utama
-            </button>
-            <button
-              onClick={() => setActiveTab('misi')}
-              className={`px-6 py-3 rounded-xl text-sm font-extrabold transition-all ${
-                activeTab === 'misi'
-                  ? 'bg-[#D93829] text-white shadow-md'
-                  : 'text-neutral-600 hover:text-neutral-900'
-              }`}
-            >
-              4 Misi Pembinaan
-            </button>
-          </div>
-        </div>
-
-        {/* Tab Content Display */}
-        {activeTab === 'visi' && (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* Vision Card */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="bg-gradient-to-br from-[#FAF6F0] to-orange-50 rounded-3xl p-8 sm:p-12 border border-[#D93829]/15 shadow-xl relative overflow-hidden"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-5 bg-gradient-to-br from-neutral-900 to-neutral-950 text-white p-8 sm:p-10 rounded-3xl shadow-xl relative overflow-hidden flex flex-col justify-between"
           >
-            <div className="max-w-4xl mx-auto text-center relative z-10">
-              <div className="w-20 h-20 rounded-3xl bg-[#D93829] text-white flex items-center justify-center mx-auto mb-6 shadow-lg shadow-[#D93829]/30">
-                <Target className="w-10 h-10" />
+            <div>
+              <div className="w-14 h-14 rounded-2xl bg-[#D93829] flex items-center justify-center text-white mb-6 shadow-lg shadow-[#D93829]/30">
+                <Target className="w-7 h-7" />
               </div>
-              <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-neutral-900 leading-tight mb-6">
-                "Menjadi Lembaga Pencetak Huffazh Al-Qur'an 30 Juz yang Berkarakter Islami, Berjiwa Pemimpin, dan Adaptif Terhadap Perkembangan Teknologi Digital."
+              <span className="text-xs font-black uppercase tracking-widest text-amber-400 mb-2 block">
+                Visi Utama 2030
+              </span>
+              <h3 className="text-2xl font-black text-white mb-4 leading-tight">
+                Pusat Kaderisasi Huffazh Rabbani Global
               </h3>
-              <p className="text-base sm:text-lg text-neutral-700 font-medium leading-relaxed max-w-2xl mx-auto">
-                Taruna Juara Al-Qur'an Yogyakarta hadir bukan sekadar sebagai tempat menghafal, tetapi sebagai ekosistem pembinaan holistik yang membentuk mahasantri menjadi pribadi yang siap mengabdi untuk masyarakat dan agama.
+              <p className="text-sm sm:text-base text-neutral-300 font-medium leading-relaxed mb-6">
+                "{vision}"
               </p>
             </div>
-          </motion.div>
-        )}
 
-        {activeTab === 'misi' && (
+            <div className="pt-6 border-t border-neutral-800 flex items-center justify-between text-xs font-bold text-neutral-400">
+              <span>Fokus: Tahfidz + Leadership</span>
+              <span className="text-amber-400">Target 100% Mutqin</span>
+            </div>
+          </motion.div>
+
+          {/* Missions Card List */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8"
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-7 bg-[#FAF6F0] p-8 sm:p-10 rounded-3xl border border-neutral-200/80 flex flex-col justify-between"
           >
-            {misis.map((misi, idx) => {
-              const IconComp = misi.icon;
-              return (
-                <div
-                  key={idx}
-                  className="bg-white p-8 rounded-3xl border border-neutral-200/80 shadow-lg hover:shadow-xl hover:border-[#D93829]/30 transition-all group"
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-[#D93829]/10 text-[#D93829] group-hover:bg-[#D93829] group-hover:text-white flex items-center justify-center mb-6 transition-all">
-                    <IconComp className="w-7 h-7" />
-                  </div>
-                  <h4 className="text-xl font-extrabold text-neutral-900 mb-3 group-hover:text-[#D93829] transition-colors">
-                    {misi.title}
-                  </h4>
-                  <p className="text-sm text-neutral-600 font-medium leading-relaxed">
-                    {misi.description}
-                  </p>
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold">
+                  <Compass className="w-6 h-6" />
                 </div>
-              );
-            })}
+                <div>
+                  <h3 className="text-2xl font-black text-neutral-900">Misi Strategis</h3>
+                  <p className="text-xs text-neutral-500 font-medium">Langkah Nyata Pembinaan Harian</p>
+                </div>
+              </div>
+
+              <div className="space-y-4 mb-8">
+                {missions.map((misi, idx) => (
+                  <div key={idx} className="flex items-start gap-4 p-4 rounded-2xl bg-white border border-neutral-200/60 shadow-sm">
+                    <div className="w-8 h-8 rounded-xl bg-[#D93829] text-white flex items-center justify-center font-black text-xs shrink-0 mt-0.5">
+                      0{idx + 1}
+                    </div>
+                    <p className="text-xs sm:text-sm font-semibold text-neutral-800 leading-relaxed">
+                      {misi}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Core Values */}
+            <div className="grid grid-cols-3 gap-3 border-t border-neutral-200 pt-6">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span className="text-xs font-bold text-neutral-700">Integritas</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <HeartHandshake className="w-4 h-4 text-amber-600 shrink-0" />
+                <span className="text-xs font-bold text-neutral-700">Ukhuwah</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-[#D93829] shrink-0" />
+                <span className="text-xs font-bold text-neutral-700">Kemandirian</span>
+              </div>
+            </div>
           </motion.div>
-        )}
+        </div>
       </div>
     </section>
   );
